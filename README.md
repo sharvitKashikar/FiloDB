@@ -13,7 +13,7 @@
 
 </div>
 
-## 📋 Table of Contents
+## Table of Contents
 
 - [Overview](#overview)
 - [Key Features](#key-features)
@@ -28,20 +28,20 @@
 - [Contributing](#contributing)
 - [License](#license)
 
-## 🎯 Overview
+## Overview
 
 FiloDB is a lightweight relational database management system designed for applications requiring fast, reliable data storage with ACID compliance. Built from the ground up in Go, it implements modern database concepts including B+ tree indexing, memory-mapped I/O, and concurrent transaction processing.
 
 ### Why FiloDB?
 
-- **🚀 High Performance**: B+ tree storage engine with memory-mapped I/O
-- **🔒 ACID Compliant**: Full transaction support with rollback capabilities
-- **📊 Simple Yet Powerful**: SQL-like commands with intuitive interface
-- **🛡️ Reliable**: Built-in data integrity checks and error handling
-- **⚡ Concurrent**: Multi-reader support with optimized locking
-- **🔧 Lightweight**: Single binary deployment with no dependencies
+- **High Performance**: B+ tree storage engine with memory-mapped I/O
+- **ACID Compliant**: Full transaction support with rollback capabilities
+- **Simple Yet Powerful**: SQL-like commands with intuitive interface
+- **Reliable**: Built-in data integrity checks and error handling
+- **Concurrent**: Multi-reader support with optimized locking
+- **Lightweight**: Single binary deployment with no dependencies
 
-## ✨ Key Features
+## Key Features
 
 ### Core Database Features
 - **B+ Tree Storage Engine**: Optimized for range queries and fast lookups
@@ -65,7 +65,7 @@ FiloDB is a lightweight relational database management system designed for appli
 - **Atomic Operations**: All-or-nothing data modifications
 - **Error Recovery**: Robust error handling and recovery mechanisms
 
-## 🏗️ Architecture
+## Architecture
 
 FiloDB follows a modular architecture designed for performance and maintainability:
 
@@ -94,7 +94,7 @@ FiloDB follows a modular architecture designed for performance and maintainabili
 | **Memory Manager** | `filodb_memory.go` | Free space tracking and allocation |
 | **Query Engine** | `filodb_queries.go` | Range queries and data retrieval |
 
-## 🛠️ Installation
+##  Installation
 
 ### Prerequisites
 
@@ -132,7 +132,7 @@ Available Commands You can use:
 >
 ```
 
-## 🚀 Quick Start
+##  Quick Start
 
 ### 1. Start FiloDB
 ```bash
@@ -179,7 +179,7 @@ email: john@example.com
 age: 30
 ```
 
-## 📖 Command Reference
+## Command Reference
 
 ### Database Commands
 
@@ -550,7 +550,7 @@ chmod 644 database.db
 | `invalid type` | Data type mismatch | Check column types match input |
 | `table not found` | Querying non-existent table | Verify table name spelling |
 
-## 🤝 Contributing
+##  Contributing
 
 We welcome contributions to FiloDB! Here's how you can help:
 
@@ -596,7 +596,7 @@ go build -o filodb
 - **Testing**: Unit tests, integration tests, benchmarks
 - **Platform Support**: Optimization for specific operating systems
 
-## 📄 License
+##  License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
@@ -618,7 +618,7 @@ copies or substantial portions of the Software.
 
 ---
 
-## 📞 Support
+##  Support
 
 - **Issues**: [GitHub Issues](https://github.com/sharvitKashikar/FiloDB-/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/sharvitKashikar/FiloDB-/discussions)
@@ -628,8 +628,8 @@ copies or substantial portions of the Software.
 
 <div align="center">
 
-**Built with ❤️ by [Sharvit Kashikar](https://github.com/sharvitKashikar)**
+**Built with  by [Sharvit Kashikar](https://github.com/sharvitKashikar)**
 
-⭐ **Star this repository if you find it useful!** ⭐
+ **Star this repository if you find it useful!** 
 
 </div>
