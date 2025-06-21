@@ -174,8 +174,8 @@ Enter value for id: 1
 
 Result:
 id: 1
-name: John Doe
-email: john@example.com
+name: Sharvit Kashikar
+email: sharvitkashikar98@gmail.com
 age: 30
 ```
 
