@@ -620,8 +620,6 @@ copies or substantial portions of the Software.
 
 ## Support
 
-- **Issues**: [GitHub Issues](https://github.com/sharvitKashikar/FiloDB-/issues)
-- **Discussions**: [GitHub Discussions](https://github.com/sharvitKashikar/FiloDB-/discussions)
 - **Email**: sharvitkashikar98@gmail.com
 
 ---
