@@ -94,7 +94,7 @@ FiloDB follows a modular architecture designed for performance and maintainabili
 | **Memory Manager** | `filodb_memory.go` | Free space tracking and allocation |
 | **Query Engine** | `filodb_queries.go` | Range queries and data retrieval |
 
-##  Installation
+## Installation
 
 ### Prerequisites
 
@@ -132,7 +132,7 @@ Available Commands You can use:
 >
 ```
 
-##  Quick Start
+## Quick Start
 
 ### 1. Start FiloDB
 ```bash
@@ -341,7 +341,7 @@ Safely closes the database and exits the program.
 > exit
 ```
 
-## 🔢 Data Types
+## Data Types
 
 FiloDB supports two fundamental data types that cover most use cases:
 
@@ -368,7 +368,7 @@ Enter column types: 1,2,1,2,1
 # Corresponds to: id(INT64), name(BYTES), price(INT64), category(BYTES), stock(INT64)
 ```
 
-## 🎯 Advanced Usage
+## Advanced Usage
 
 ### Working with Indexes
 
@@ -459,7 +459,7 @@ Enter end value: 35
 4. **Data Types**: Choose appropriate types (INT64 vs BYTES) based on usage
 5. **Query Patterns**: Design indexes based on your common query patterns
 
-## ⚡ Performance
+## Performance
 
 ### Benchmarks
 
@@ -485,7 +485,7 @@ FiloDB is optimized for high-performance operations:
 - **Concurrent Readers**: Multiple simultaneous read operations
 - **Index Performance**: Logarithmic lookup time O(log n)
 
-## 🔧 Troubleshooting
+## Troubleshooting
 
 ### Common Issues
 
@@ -550,7 +550,7 @@ chmod 644 database.db
 | `invalid type` | Data type mismatch | Check column types match input |
 | `table not found` | Querying non-existent table | Verify table name spelling |
 
-##  Contributing
+## Contributing
 
 We welcome contributions to FiloDB! Here's how you can help:
 
@@ -596,14 +596,14 @@ go build -o filodb
 - **Testing**: Unit tests, integration tests, benchmarks
 - **Platform Support**: Optimization for specific operating systems
 
-##  License
+## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ```
 MIT License
 
-Copyright (c) 2024 Sharvit Kashikar
+Copyright (c) 2024 FiloDB
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
 of this software and associated documentation files (the "Software"), to deal
@@ -618,7 +618,7 @@ copies or substantial portions of the Software.
 
 ---
 
-##  Support
+## Support
 
 - **Issues**: [GitHub Issues](https://github.com/sharvitKashikar/FiloDB-/issues)
 - **Discussions**: [GitHub Discussions](https://github.com/sharvitKashikar/FiloDB-/discussions)
@@ -628,8 +628,8 @@ copies or substantial portions of the Software.
 
 <div align="center">
 
-**Built with  by [Sharvit Kashikar](https://github.com/sharvitKashikar)**
+**Built with love by [Sharvit Kashikar](https://github.com/sharvitKashikar)**
 
- **Star this repository if you find it useful!** 
+Star this repository if you find it useful!
 
 </div>
