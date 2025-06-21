@@ -154,8 +154,8 @@ Table 'users' created successfully.
 > insert
 Enter table name: users
 Enter value for id: 1
-Enter value for name: John Doe
-Enter value for email: john@example.com
+Enter value for name: Sharvit Kashikar 
+Enter value for email: sharvit@kashikar.com
 Enter value for age: 30
 Record inserted successfully.
 ```
