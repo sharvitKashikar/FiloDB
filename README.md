@@ -191,52 +191,20 @@ email: sharvitkashikar98@gmail.com
 age: 30
 ```
 
-## Performance & Benchmarking
+## Performance
 
-### Performance Characteristics
-
-FiloDB is designed as an educational database with excellent real-world performance:
-
-- **Insert Performance**: **~1,800 ops/sec** (measured with actual benchmarks)
-- **Query Performance**: **~1,850 ops/sec** for primary key lookups  
-- **Storage Efficiency**: **0.88 KB per record** - very efficient
-- **Latency**: Sub-millisecond operations (<1ms inserts, 0.5ms queries)
+FiloDB includes comprehensive benchmarking tools and real-world performance metrics:
 
 ### Running Benchmarks
-
-FiloDB includes a comprehensive benchmarking tool to measure real-world performance:
 
 ```bash
 # Run automated performance benchmark
 ./benchmark.sh
 ```
 
-The benchmark will measure:
-- Insert performance with 50 sample records
-- Query performance with 100 lookups
-- Database file size and storage efficiency
-- Comparative analysis with performance recommendations
-
-### Manual Performance Testing
-
-For custom performance testing:
-
-```bash
-# Build FiloDB
-go build -o filodb
-
-# Time insert operations
-time echo "INSERT users 1 John john@example.com" | ./filodb
-
-# Time query operations  
-time echo "GET users 1" | ./filodb
-```
-
 ### Performance Documentation
 
-For detailed performance analysis, architecture details, and optimization guides, see:
-- [PERFORMANCE.md](./PERFORMANCE.md) - Complete performance guide
-- [database/benchmark_test.go](./database/benchmark_test.go) - Benchmarking infrastructure
+For detailed performance analysis and optimization guides, see [PERFORMANCE.md](./PERFORMANCE.md)
 
 ## Command Reference
 
@@ -518,31 +486,7 @@ Enter end value: 35
 4. **Data Types**: Choose appropriate types (INT64 vs BYTES) based on usage
 5. **Query Patterns**: Design indexes based on your common query patterns
 
-## Performance
 
-### Benchmarks
-
-FiloDB is optimized for high-performance operations:
-
-- **Insert Performance**: ~50,000 records/second (single-threaded)
-- **Query Performance**: ~100,000 lookups/second via indexes
-- **Transaction Throughput**: ~10,000 transactions/second
-- **Memory Usage**: Low overhead with memory-mapped I/O
-- **File Size**: Efficient storage with automatic space reuse
-
-### Storage Characteristics
-
-- **Page Size**: 4KB pages for optimal disk I/O
-- **B+ Tree Fan-out**: Optimized for cache efficiency
-- **Memory Mapping**: Reduces I/O overhead significantly
-- **Free Space Management**: Automatic reclamation of deleted record space
-
-### Scalability
-
-- **File Size Limit**: Theoretically up to available disk space
-- **Record Limit**: Billions of records supported
-- **Concurrent Readers**: Multiple simultaneous read operations
-- **Index Performance**: Logarithmic lookup time O(log n)
 
 ## Troubleshooting
 
