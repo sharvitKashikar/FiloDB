@@ -2,7 +2,9 @@ package database
 
 import (
 	"bytes"
+	"encoding/json"
 	"fmt"
+	"reflect"
 )
 
 const (
@@ -258,4 +260,133 @@ func iterNext(iter *BIter, level int) {
 		iter.path[level+1] = kid
 		iter.pos[level+1] = 0
 	}
+}
+
+// JSONQuery represents a JSON-style query
+type JSONQuery map[string]interface{}
+
+// ParseJSONQuery parses JSON query syntax like {"id": 1, "age": {">": 25}}
+func ParseJSONQuery(queryStr string) (JSONQuery, error) {
+	var query JSONQuery
+	if err := json.Unmarshal([]byte(queryStr), &query); err != nil {
+		return nil, fmt.Errorf("invalid JSON query: %w", err)
+	}
+	return query, nil
+}
+
+// ExecuteJSONQuery executes a JSON-style query on a table
+func (db *DB) ExecuteJSONQuery(table string, queryStr string, kvReader *KVReader) ([]*Record, error) {
+	query, err := ParseJSONQuery(queryStr)
+	if err != nil {
+		return nil, err
+	}
+
+	tdef := GetTableDef(db, table, &kvReader.Tree)
+	if tdef == nil {
+		return nil, fmt.Errorf("table not found: %s", table)
+	}
+
+	// For now, implement simple equality checks
+	// This can be extended to support operators like >, <, etc.
+	var results []*Record
+
+	// Create a scanner for full table scan (can be optimized later)
+	scanner := Scanner{
+		Cmp1: CMP_GE,
+		Cmp2: CMP_LE,
+	}
+
+	if err := dbScan(db, tdef, &scanner, &kvReader.Tree); err != nil {
+		return nil, err
+	}
+
+	// Filter results based on JSON query
+	for scanner.Valid() {
+		rec := &Record{
+			Cols: make([]string, len(tdef.Cols)),
+			Vals: make([]Value, len(tdef.Cols)),
+		}
+		copy(rec.Cols, tdef.Cols)
+		scanner.Deref(rec, &kvReader.Tree)
+
+		if matchesJSONQuery(rec, query, tdef) {
+			results = append(results, rec)
+		}
+
+		scanner.Next()
+		if len(results) > 1000 { // Safety limit
+			break
+		}
+	}
+
+	return results, nil
+}
+
+// matchesJSONQuery checks if a record matches the JSON query conditions
+func matchesJSONQuery(rec *Record, query JSONQuery, tdef *TableDef) bool {
+	for field, condition := range query {
+		// Find the column index
+		colIndex := -1
+		for i, col := range tdef.Cols {
+			if col == field {
+				colIndex = i
+				break
+			}
+		}
+
+		if colIndex == -1 {
+			continue // Skip unknown columns
+		}
+
+		if !matchesCondition(rec.Vals[colIndex], condition) {
+			return false
+		}
+	}
+	return true
+}
+
+// matchesCondition checks if a value matches a specific condition
+func matchesCondition(val Value, condition interface{}) bool {
+	switch cond := condition.(type) {
+	case string:
+		// Simple string equality
+		return string(val.Str) == cond
+	case float64:
+		// Numeric equality
+		if val.Type == TYPE_INT64 {
+			return float64(val.I64) == cond
+		}
+	case map[string]interface{}:
+		// Complex conditions like {">": 25, "<": 40}
+		for op, value := range cond {
+			if !evaluateOperator(val, op, value) {
+				return false
+			}
+		}
+		return true
+	}
+
+	// Default: simple equality
+	return reflect.DeepEqual(val, condition)
+}
+
+// evaluateOperator evaluates comparison operators
+func evaluateOperator(val Value, operator string, compareValue interface{}) bool {
+	if val.Type == TYPE_INT64 {
+		if compareVal, ok := compareValue.(float64); ok {
+			switch operator {
+			case ">":
+				return float64(val.I64) > compareVal
+			case "<":
+				return float64(val.I64) < compareVal
+			case ">=":
+				return float64(val.I64) >= compareVal
+			case "<=":
+				return float64(val.I64) <= compareVal
+			case "=", "==":
+				return float64(val.I64) == compareVal
+			}
+		}
+	}
+	return false
 }

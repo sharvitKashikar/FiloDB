@@ -72,6 +72,7 @@ func PrintWelcomeMessage(isWelcome bool) {
 	fmt.Println("  BEGIN        - Begin new transaction")
 	fmt.Println("  COMMIT       - Commit transaction")
 	fmt.Println("  ABORT        - Rollback transaction")
+	fmt.Println("  STATS        - Show database statistics")
 	fmt.Println("  HELP         - List all commands")
 	fmt.Println("  EXIT         - Exit the program")
 	fmt.Println()
