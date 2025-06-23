@@ -32,7 +32,7 @@
 
 FiloDB is a lightweight relational database management system designed for applications requiring fast, reliable data storage with ACID compliance. Built from the ground up in Go, it implements modern database concepts including B+ tree indexing, memory-mapped I/O, and concurrent transaction processing.
 
-## 🚀 **What Makes FiloDB Different**
+## **What Makes FiloDB Different**
 
 | Feature | FiloDB | Other Go Databases |
 |---------|--------|-------------------|
