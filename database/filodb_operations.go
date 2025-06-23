@@ -197,9 +197,9 @@ func dbDelete(db *DB, tdef *TableDef, rec Record, kvtx *KVTX) (bool, error) {
 	}
 	key := encodeKey(nil, tdef.Prefix, values[:tdef.PKeys])
 	req := DeleteReq{Key: key}
-	deleted, error := kvtx.Delete(&req)
-	if error != nil || !deleted || len(tdef.Indexes) == 0 {
-		return deleted, error
+	deleted, err := kvtx.Delete(&req)
+	if err != nil || !deleted || len(tdef.Indexes) == 0 {
+		return deleted, err
 	}
 	for i := tdef.PKeys; i <= len(tdef.Cols[tdef.PKeys:]); i++ {
 		values[i] = Value{Type: tdef.Types[i]}
