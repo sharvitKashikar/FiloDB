@@ -23,7 +23,14 @@ go.work.sum
 
 # env file
 .env
+
+# Database files
 database.db
+*.db
+test.db
+perf_test.db
+bench_*.db
+size_test_*.db
 
 .vscode/
 env*
