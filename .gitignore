@@ -27,3 +27,4 @@ database.db
 
 .vscode/
 env*
+filodb
