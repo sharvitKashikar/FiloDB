@@ -17,7 +17,7 @@ const (
 const TABLE_PREFIX_MIN = 1
 
 type InsertReq struct {
-	tree *BTree
+	*BTree
 	// out
 	Added   bool   // added a new key
 	Updated bool   // added a new key or an old key was changed
@@ -29,7 +29,7 @@ type InsertReq struct {
 }
 
 type DeleteReq struct {
-	tree *BTree
+	*BTree
 	// in
 	Key []byte
 	// out
