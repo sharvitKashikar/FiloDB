@@ -191,6 +191,53 @@ email: sharvitkashikar98@gmail.com
 age: 30
 ```
 
+## Performance & Benchmarking
+
+### Performance Characteristics
+
+FiloDB is designed as an educational database with the following performance profile:
+
+- **Insert Performance**: ~100-500 ops/sec for small datasets
+- **Query Performance**: ~1,000-5,000 ops/sec for primary key lookups  
+- **Storage Efficiency**: ~1-2 KB overhead per record
+- **Concurrency**: Multiple readers, single writer
+
+### Running Benchmarks
+
+FiloDB includes a comprehensive benchmarking tool to measure real-world performance:
+
+```bash
+# Run automated performance benchmark
+./benchmark.sh
+```
+
+The benchmark will measure:
+- Insert performance with 50 sample records
+- Query performance with 100 lookups
+- Database file size and storage efficiency
+- Comparative analysis with performance recommendations
+
+### Manual Performance Testing
+
+For custom performance testing:
+
+```bash
+# Build FiloDB
+go build -o filodb
+
+# Time insert operations
+time echo "INSERT users 1 John john@example.com" | ./filodb
+
+# Time query operations  
+time echo "GET users 1" | ./filodb
+```
+
+### Performance Documentation
+
+For detailed performance analysis, architecture details, and optimization guides, see:
+- [PERFORMANCE.md](./PERFORMANCE.md) - Complete performance guide
+- [database/benchmark_test.go](./database/benchmark_test.go) - Benchmarking infrastructure
+
 ## Command Reference
 
 ### Database Commands
