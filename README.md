@@ -489,8 +489,6 @@ Enter end value: 35
 4. **Data Types**: Choose appropriate types (INT64 vs BYTES) based on usage
 5. **Query Patterns**: Design indexes based on your common query patterns
 
-
-
 ## Troubleshooting
 
 ### Common Issues
@@ -606,21 +604,20 @@ go build -o filodb
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-```
-MIT License
+## References and Learning Resources
 
-Copyright (c) 2024 FiloDB
+This project's implementation was inspired by and learned from various resources in the database development community:
 
-Permission is hereby granted, free of charge, to any person obtaining a copy
-of this software and associated documentation files (the "Software"), to deal
-in the Software without restriction, including without limitation the rights
-to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
-copies of the Software, and to permit persons to whom the Software is
-furnished to do so, subject to the following conditions:
+- "Build Your Own Database in Go" - A foundational resource that provided valuable insights into database implementation patterns
+- Database Internals: A Deep Dive into How Distributed Data Systems Work
+- Designing Data-Intensive Applications by Martin Kleppmann
 
-The above copyright notice and this permission notice shall be included in all
-copies or substantial portions of the Software.
-```
+While the core concepts and patterns are similar to standard database implementations, FiloDB includes additional features focused on performance analysis and monitoring:
+- Comprehensive benchmark test suite for performance measurement
+- Built-in statistics tracking and monitoring
+- Performance metrics collection and reporting
+- Automated performance testing through benchmark.sh
+- Detailed performance documentation in PERFORMANCE.md
 
 ---
 
