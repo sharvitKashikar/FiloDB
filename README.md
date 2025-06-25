@@ -608,7 +608,7 @@ This project is licensed under the MIT License - see the [LICENSE](LICENSE) file
 
 This project's implementation was inspired by and learned from various resources in the database development community:
 
-- "Build Your Own Database in Go" - A foundational resource that provided valuable insights into database implementation patterns
+- "Build Your Own Database From Scratch in Go" - A foundational resource that provided valuable insights into database implementation patterns
 - Database Internals: A Deep Dive into How Distributed Data Systems Work
 - Designing Data-Intensive Applications by Martin Kleppmann
 
