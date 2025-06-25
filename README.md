@@ -1,3 +1,7 @@
+<p align="center">
+  <img src="Assets/FiloDBLogo.png" alt="FiloDB Logo" width="300"/>
+</p>
+
 # FiloDB
 
 <div align="center">
