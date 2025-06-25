@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="Assets/FiloDBLogo.png" alt="FiloDB Logo" width="300"/>
+  <img src="Assets/FiloDBLogo.png" alt="FiloDB Logo" />
 </p>
 
 # FiloDB
@@ -44,7 +44,6 @@ FiloDB is a lightweight relational database management system designed for appli
 | **CLI Experience** | Interactive with stats command | Basic command interface |
 | **JSON Queries** | ✅ Native JSON query syntax | ❌ SQL-only |
 | **Performance Metrics** | ✅ Built-in stats & monitoring | ❌ Limited visibility |
-| **Documentation** | 📚 Extensive learning-focused docs | Basic README |
 | **Cross-Platform** | ✅ Optimized mmap per OS | Basic compatibility |
 | **Worker Pools** | ✅ Background processing | Basic threading |
 
