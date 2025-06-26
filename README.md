@@ -499,8 +499,8 @@ Enter table name: <table_name>
 ```sql
 > scan
 Enter table name: users
-Record 1: id=1, name=John Smith, email=john@example.com, age=28
-Record 2: id=2, name=Sarah Johnson, email=sarah@company.com, age=32
+Record 1: id=1, name=Arjun Patel, email=arjun@techsolutions.com, age=28
+Record 2: id=2, name=Priya Sharma, email=priya@innovatetech.in, age=32
 ...
 Total records: 5
 ```
@@ -580,7 +580,7 @@ FiloDB supports two fundamental data types that cover most use cases:
 ### 2. BYTES (Type ID: 2)
 - **Purpose**: Variable-length byte arrays (strings/binary data)
 - **Use Cases**: Names, emails, descriptions, JSON data, file contents
-- **Examples**: `"John Doe"`, `"user@example.com"`, `"Product description"`
+- **Examples**: `"Rahul Gupta"`, `"rahul@techcorp.in"`, `"Product description"`
 
 ### Type Specification Examples
 

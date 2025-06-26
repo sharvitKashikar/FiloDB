@@ -1,8 +1,8 @@
 # FiloDB Performance Guide
 
-## 🎯 **Real Benchmark Results**
+## **Real Benchmark Results**
 
-Based on actual testing with the included benchmark tool (`./benchmark.sh`):
+I've tested FiloDB extensively using the benchmark tool I built. Here's what I found:
 
 ### **Measured Performance**
 | Operation | **Actual Results** | Test Details |
@@ -13,25 +13,25 @@ Based on actual testing with the included benchmark tool (`./benchmark.sh`):
 | **Average Insert Latency** | **<1ms** | Sub-millisecond operations |
 | **Average Query Latency** | **0.5ms** | Excellent lookup speed |
 
-## 🚀 **Performance Highlights**
+## **Performance Highlights**
 
-### **Architecture Advantages**
-- **B+ Tree Storage**: O(log n) search, insert, and delete operations
-- **Memory-Mapped I/O**: Efficient file operations for performance
-- **ACID Transactions**: Full consistency with good performance
-- **Concurrent Reads**: Multiple simultaneous read operations
+### **Why It's Fast**
+- **B+ Tree Storage**: Keeps things organized for quick lookups
+- **Memory-Mapped I/O**: Works directly with the OS for speed
+- **ACID Transactions**: All the safety without sacrificing much speed
+- **Concurrent Reads**: Multiple people can read at the same time
 
 ### **Real-World Comparison**
 
 | Database | Insert (ops/sec) | Query (ops/sec) | Use Case |
 |----------|------------------|-----------------|----------|
-| **FiloDB** | **~1,800** ⚡ | **~1,850** ⚡ | Educational, Small-Medium Apps |
+| **FiloDB** | **~1,800** | **~1,850** | Educational, Small-Medium Apps |
 | SQLite | 1,000-10,000 | 10,000+ | Embedded Applications |
 | PostgreSQL | 5,000-50,000 | 50,000+ | Production Applications |
 
-*FiloDB performs better than expected for an educational database!*
+*Honestly surprised by how well it performs for a learning project!*
 
-## 📊 **Running Your Own Benchmarks**
+## **Running Your Own Benchmarks**
 
 ### **Automated Benchmark**
 ```bash
@@ -53,7 +53,7 @@ Storage Efficiency: .88 KB per record
 go build -o filodb
 
 # Time insert operations
-time echo "INSERT users 1 John john@example.com" | ./filodb
+time echo "INSERT users 1 Vikash vikash@startup.in" | ./filodb
 
 # Time query operations  
 time echo "GET users 1" | ./filodb
@@ -71,64 +71,64 @@ Concurrent Reads: Enabled
 ========================
 ```
 
-## 🔧 **Performance Characteristics**
+## **What Works Well and What Doesn't**
 
-### **Strengths**
-- ✅ **Fast operations**: Sub-millisecond insert/query latency
-- ✅ **Efficient storage**: <1KB overhead per record
-- ✅ **Good throughput**: 1,800+ operations per second
-- ✅ **ACID compliant**: Full transaction support
-- ✅ **Memory efficient**: Only loads needed pages
+### **What FiloDB Does Well**
+- **Really fast operations**: Most things happen in under a millisecond
+- **Doesn't waste space**: Each record only adds about 1KB of overhead
+- **Decent speed**: Can handle around 1,800 operations per second
+- **Reliable**: Full ACID transactions so your data stays safe
+- **Smart memory use**: Only loads what it actually needs
 
-### **Limitations**
-- ⚠️ **Single writer**: No concurrent write operations
-- ⚠️ **No query optimization**: Simple execution plans
-- ⚠️ **Limited concurrency**: Educational focus over scale
-- ⚠️ **Small dataset optimized**: Best for <10,000 records
+### **Current Limitations**
+- **Only one writer at a time**: Can't have multiple people writing simultaneously
+- **No fancy optimizations**: Queries run pretty much as-is
+- **Not built for massive scale**: This is a learning project, not production software
+- **Works best with smaller data**: Sweet spot is under 10,000 records
 
-## 💡 **Performance Best Practices**
+## **Tips to Get Better Performance**
 
-1. **Use appropriate data types**: INT64 for numbers, BYTES for strings
-2. **Create selective indexes**: Index frequently queried columns
-3. **Batch transactions**: Group multiple operations when possible
-4. **Monitor with stats**: Use built-in performance monitoring
-5. **Test your workload**: Run `./benchmark.sh` to get baseline numbers
+1. **Pick the right data types**: Use INT64 for numbers, BYTES for text
+2. **Index what you search**: Add indexes on columns you query often
+3. **Group your operations**: Use transactions for multiple changes
+4. **Keep an eye on stats**: The built-in stats command shows you what's happening
+5. **Test with your own data**: Run the benchmark tool to see how it performs for you
 
-## 🎯 **Recommended Use Cases**
+## **Recommended Use Cases**
 
-Based on actual performance results:
+Based on my testing, here's where FiloDB works well and where it doesn't:
 
-### **✅ Excellent For:**
+### **Excellent For:**
 - Educational projects and learning database internals
 - Small to medium applications (< 10,000 records)
 - Prototyping and development
 - Applications requiring ACID compliance
 - Systems with read-heavy workloads
 
-### **❌ Not Recommended For:**
+### **Not Recommended For:**
 - High-frequency trading systems
 - Large-scale web applications
 - Analytics with massive datasets
 - Systems requiring high write concurrency
 
-## 🔍 **Understanding the Numbers**
+## **Why These Numbers Matter**
 
-**Why FiloDB performs well:**
-- Simple architecture with fewer abstractions
-- Memory-mapped I/O reduces system call overhead
-- B+ tree provides efficient data structure operations
-- Educational focus on correctness enables good performance
+**FiloDB works well because:**
+- I kept the design simple and straightforward
+- Memory-mapped files avoid a lot of system overhead
+- B+ trees are just really good data structures
+- Building it for learning meant focusing on getting things right
 
-**Performance varies by:**
-- Hardware specifications (CPU, SSD vs HDD)
-- Data size and complexity
-- Query patterns and access frequency
-- System load and available memory
+**Your results might be different based on:**
+- What hardware you're running (SSD makes a big difference)
+- How much data you're working with
+- What kinds of queries you're doing
+- What else is running on your system
 
 ---
 
-**Want to contribute?** Help optimize FiloDB further:
-- Implement query optimization
-- Add write batching
-- Improve B-tree splitting algorithms
-- Add more comprehensive benchmarks 
+**Want to help make it faster?** There's still lots to improve:
+- Better query planning and optimization
+- Batching writes for better throughput
+- Smarter B-tree splitting
+- More realistic benchmarks 
