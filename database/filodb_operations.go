@@ -134,6 +134,16 @@ func (db *DB) GetRange(table string, start, end *Record, kvReader *KVReader) ([]
 		return nil, fmt.Errorf("table not found: %s", table)
 	}
 
+	// Check if we can use direct range scanning
+	_, err := findIndex(tdef, start.Cols)
+	if err != nil {
+		// If no index found for direct scanning, try filtered approach for single column queries
+		if len(start.Cols) == 1 {
+			return db.getRangeFiltered(table, start, end, kvReader, tdef)
+		}
+		return nil, err
+	}
+
 	var results []*Record
 	maxResults := 500 // Safety limit
 
@@ -168,6 +178,112 @@ func (db *DB) GetRange(table string, start, end *Record, kvReader *KVReader) ([]
 	}
 
 	return results, nil
+}
+
+// getRangeFiltered performs range filtering on a single column by scanning and filtering
+func (db *DB) getRangeFiltered(table string, start, end *Record, kvReader *KVReader, tdef *TableDef) ([]*Record, error) {
+	if len(start.Cols) != 1 || len(end.Cols) != 1 {
+		return nil, fmt.Errorf("filtered range query only supports single column")
+	}
+
+	colName := start.Cols[0]
+	colIndex := ColIndex(tdef, colName)
+	if colIndex < 0 {
+		return nil, fmt.Errorf("column '%s' not found", colName)
+	}
+
+	// Check if column is indexed (in any index) or is primary key
+	isIndexed := false
+	for i := 0; i < tdef.PKeys; i++ {
+		if tdef.Cols[i] == colName {
+			isIndexed = true
+			break
+		}
+	}
+	if !isIndexed {
+		for _, index := range tdef.Indexes {
+			for _, indexCol := range index {
+				if indexCol == colName {
+					isIndexed = true
+					break
+				}
+			}
+			if isIndexed {
+				break
+			}
+		}
+	}
+
+	if !isIndexed {
+		return nil, fmt.Errorf("column '%s' is not indexed", colName)
+	}
+
+	// Perform full table scan with filtering
+	scanner, err := NewTableScanner(db, table, kvReader, tdef)
+	if err != nil {
+		return nil, fmt.Errorf("scanner creation failed: %v", err)
+	}
+
+	var results []*Record
+	maxResults := 500
+	scanner.Start()
+
+	startVal := start.Vals[0]
+	endVal := end.Vals[0]
+
+	for {
+		rec, hasMore, recOK := scanner.Next()
+		if !hasMore {
+			if recOK && rec != nil {
+				// Check if this record is within range
+				if colIndex < len(rec.Vals) {
+					recVal := rec.Vals[colIndex]
+					if isValueInRange(recVal, startVal, endVal) {
+						results = append(results, rec)
+					}
+				}
+			}
+			break
+		}
+		if rec != nil && colIndex < len(rec.Vals) {
+			// Check if this record is within range
+			recVal := rec.Vals[colIndex]
+			if isValueInRange(recVal, startVal, endVal) {
+				results = append(results, rec)
+				if len(results) >= maxResults {
+					break
+				}
+			}
+		}
+	}
+
+	return results, nil
+}
+
+// isValueInRange checks if a value is within the specified range
+func isValueInRange(val, start, end Value) bool {
+	if val.Type != start.Type || val.Type != end.Type {
+		return false
+	}
+
+	switch val.Type {
+	case TYPE_INT64:
+		return val.I64 >= start.I64 && val.I64 <= end.I64
+	case TYPE_BYTES:
+		valStr := string(val.Str)
+		startStr := string(start.Str)
+		endStr := string(end.Str)
+		return valStr >= startStr && valStr <= endStr
+	case TYPE_FLOAT64:
+		return val.F64 >= start.F64 && val.F64 <= end.F64
+	case TYPE_BOOLEAN:
+		// For boolean range, both start and end should be the same
+		return val.Bool == start.Bool && start.Bool == end.Bool
+	case TYPE_DATETIME:
+		return !val.Time.Before(start.Time) && !val.Time.After(end.Time)
+	default:
+		return false
+	}
 }
 
 func (db *DB) Insert(table string, rec Record, kvtx *KVTX) (bool, error) {

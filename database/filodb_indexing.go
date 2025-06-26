@@ -77,7 +77,28 @@ func findIndex(tdef *TableDef, keys []string) (int, error) {
 		return -1, nil
 	}
 
-	// find suitable index
+	// For range queries with single column, check if column exists in any index
+	if len(keys) == 1 {
+		targetCol := keys[0]
+
+		// Check if the column is the primary key
+		for _, pkCol := range pk {
+			if pkCol == targetCol {
+				return -1, nil
+			}
+		}
+
+		// Check if the column exists in any index (not necessarily as prefix)
+		for i, index := range tdef.Indexes {
+			for _, indexCol := range index {
+				if indexCol == targetCol {
+					return i, nil
+				}
+			}
+		}
+	}
+
+	// find suitable index for multi-column queries (original logic)
 	winner := -2
 	for i, index := range tdef.Indexes {
 		if !isPrefix(index, keys) {

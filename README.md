@@ -186,7 +186,7 @@ Select query type:
 2. Range query
 3. Column filter
 Enter choice (1, 2 or 3): 1
-Enter index column(s): id
+Enter index column(s) (comma-separated for composite index): id
 Enter value for id: 1
 
 Result:
@@ -312,7 +312,7 @@ Retrieves records from the database using various query methods.
 > get
 Enter table name: products
 Select query type: 1
-Enter index column(s): id
+Enter index column(s) (comma-separated for composite index): id
 Enter value for id: 101
 ```
 
@@ -321,9 +321,9 @@ Enter value for id: 101
 > get
 Enter table name: products
 Select query type: 2
-Enter column names for range: price
-Enter start value for price: 500
-Enter end value for price: 1500
+Enter column name for range lookup(index col): price
+Enter start range value: 500
+Enter end range value: 1500
 ```
 
 #### UPDATE - Modify Records
@@ -737,17 +737,17 @@ If any operation fails, use `abort` to rollback all changes.
 > get
 Enter table name: products
 Select query type: 2
-Enter column names for range: price
-Enter start value: 100
-Enter end value: 500
+Enter column name for range lookup(index col): price
+Enter start range value: 1000
+Enter end range value: 50000
 
 # Find users by age range
 > get
 Enter table name: users  
 Select query type: 2
-Enter column names for range: age
-Enter start value: 25
-Enter end value: 35
+Enter column name for range lookup(index col): age
+Enter start range value: 25
+Enter end range value: 35
 ```
 
 ### Performance Optimization Tips
@@ -881,12 +881,31 @@ This project's implementation was inspired by and learned from various resources
 - Database Internals: A Deep Dive into How Distributed Data Systems Work
 - Designing Data-Intensive Applications by Martin Kleppmann
 
-While the core concepts and patterns are similar to standard database implementations, FiloDB includes additional features focused on performance analysis and monitoring:
-- Comprehensive benchmark test suite for performance measurement
-- Built-in statistics tracking and monitoring
-- Performance metrics collection and reporting
-- Automated performance testing through benchmark.sh
-- Detailed performance documentation in PERFORMANCE.md
+While the core concepts and patterns are similar to standard database implementations, FiloDB includes significant additional features and enhancements:
+
+**Extended Data Type System:**
+- FLOAT64 support with IEEE 754 binary encoding for precise decimal calculations
+- BOOLEAN data type with flexible input formats (true/false, 1/0, yes/no, y/n)
+- DATETIME support with multiple input formats and UTC timezone consistency
+- Enhanced serialization/deserialization for all five data types
+
+**Advanced Query Capabilities:**
+- Range queries on indexed columns with optimized B+ tree scanning
+- Composite index support for complex multi-column queries
+- Enhanced aggregate functions (SUM/AVG support for both INT64 and FLOAT64)
+- MIN/MAX operations working across all data types including datetime comparisons
+
+**Robust Command Interface:**
+- Interactive CLI with intuitive menu-driven operations
+- Enhanced error handling and user-friendly error messages
+- Comprehensive table scanning and debugging utilities
+- Safe extension approach maintaining backward compatibility
+
+**Performance and Reliability:**
+- Fixed scanner initialization preventing data corruption
+- Consistent timezone handling for datetime operations
+- Memory-safe range query implementation
+- Comprehensive test coverage for all data types and operations
 
 ---
 
