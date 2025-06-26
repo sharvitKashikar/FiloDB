@@ -7,7 +7,7 @@
 <div align="center">
 
 ![FiloDB Logo](https://img.shields.io/badge/FiloDB-Database-blue?style=for-the-badge)
-![Go Version](https://img.shields.io/badge/Go-1.17+-00ADD8?style=for-the-badge&logo=go)
+![Go Version](https://img.shields.io/badge/Go-1.23+-00ADD8?style=for-the-badge&logo=go)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)
 
@@ -41,11 +41,11 @@ FiloDB is a lightweight relational database management system designed for appli
 | Feature | FiloDB | Other Go Databases |
 |---------|--------|-------------------|
 | **Dependencies** | Only `golang.org/x/sys` | Multiple external deps |
-| **CLI Experience** | Interactive with stats command | Basic command interface |
-| **JSON Queries** | ✅ Native JSON query syntax | ❌ SQL-only |
-| **Performance Metrics** | ✅ Built-in stats & monitoring | ❌ Limited visibility |
-| **Cross-Platform** | ✅ Optimized mmap per OS | Basic compatibility |
-| **Worker Pools** | ✅ Background processing | Basic threading |
+| **CLI Experience** | Interactive with aggregate functions | Basic command interface |
+| **Query Features** | SQL-like with range queries | Standard SQL only |
+| **Performance Metrics** | Built-in stats and monitoring | Limited visibility |
+| **Cross-Platform** | Optimized memory mapping per OS | Basic compatibility |
+| **Worker Pools** | Background processing support | Basic threading |
 
 ### Why FiloDB?
 
@@ -75,6 +75,8 @@ FiloDB is a lightweight relational database management system designed for appli
 
 ### Operational Features
 - **Interactive CLI**: User-friendly command-line interface
+- **Aggregate Functions**: Built-in COUNT, SUM, AVG, MIN, MAX operations
+- **Data Analysis Tools**: SCAN and DEBUG commands for table inspection
 - **Cross-Platform**: Support for Linux, macOS, and Windows
 - **Single File Database**: All data stored in one `.db` file
 - **Atomic Operations**: All-or-nothing data modifications
@@ -113,7 +115,7 @@ FiloDB follows a modular architecture designed for performance and maintainabili
 
 ### Prerequisites
 
-- **Go 1.17 or later** ([Download Go](https://golang.org/dl/))
+- **Go 1.23 or later** ([Download Go](https://golang.org/dl/))
 - **Git** ([Download Git](https://git-scm.com/downloads))
 - **Operating System**: Linux, macOS, or Windows
 
@@ -190,7 +192,7 @@ Enter value for id: 1
 Result:
 id: 1
 name: Sharvit Kashikar
-email: sharvitkashikar98@gmail.com
+email: sharvit@kashikar.com
 age: 30
 ```
 
@@ -370,6 +372,200 @@ Safely closes the database and exits the program.
 ```sql
 > exit
 ```
+
+### Aggregate Functions
+
+FiloDB includes a powerful set of aggregate functions for data analysis and reporting. These functions let you perform calculations across multiple records in your tables without needing external tools.
+
+#### COUNT - Count Records
+Counts the total number of records in a table.
+
+**Syntax:**
+```sql
+> count
+Enter table name: <table_name>
+```
+
+**Example:**
+```sql
+> count
+Enter table name: sales
+Table: sales
+Count: 1,250
+```
+
+This is particularly useful for getting quick insights into data volume and checking if records exist.
+
+#### SUM - Calculate Totals
+Adds up all numeric values in a specified column.
+
+**Syntax:**
+```sql
+> sum
+Enter table name: <table_name>
+Enter column name for SUM: <numeric_column>
+```
+
+**Example:**
+```sql
+> sum
+Enter table name: sales
+Enter column name for SUM: amount
+Table: sales
+Column: amount
+Records processed: 1,250
+SUM(amount): 485,750
+```
+
+Great for calculating totals like revenue, quantities, or any numeric aggregations.
+
+#### AVG - Find Averages
+Calculates the average value of a numeric column.
+
+**Syntax:**
+```sql
+> avg
+Enter table name: <table_name>
+Enter column name for AVG: <numeric_column>
+```
+
+**Example:**
+```sql
+> avg
+Enter table name: products
+Enter column name for AVG: price
+Table: products
+Column: price
+Records processed: 45
+AVG(price): 324
+```
+
+This helps you understand typical values like average order amounts or product prices.
+
+#### MIN - Find Minimum Values
+Finds the smallest value in a column (works with both numbers and text).
+
+**Syntax:**
+```sql
+> min
+Enter table name: <table_name>
+Enter column name for MIN: <column_name>
+```
+
+**Example:**
+```sql
+> min
+Enter table name: products
+Enter column name for MIN: price
+Table: products
+Column: price
+Records processed: 45
+MIN(price): 12
+```
+
+#### MAX - Find Maximum Values
+Finds the largest value in a column (works with both numbers and text).
+
+**Syntax:**
+```sql
+> max
+Enter table name: <table_name>
+Enter column name for MAX: <column_name>
+```
+
+**Example:**
+```sql
+> max
+Enter table name: sales
+Enter column name for MAX: amount
+Table: sales
+Column: amount
+Records processed: 1,250
+MAX(amount): 2,500
+```
+
+### Utility Commands
+
+#### SCAN - View All Records
+Shows every record in a table with clean, formatted output.
+
+**Syntax:**
+```sql
+> scan
+Enter table name: <table_name>
+```
+
+**Example:**
+```sql
+> scan
+Enter table name: users
+Record 1: id=1, name=John Smith, email=john@example.com, age=28
+Record 2: id=2, name=Sarah Johnson, email=sarah@company.com, age=32
+...
+Total records: 5
+```
+
+This command is really useful for debugging and seeing all your data at once.
+
+#### DEBUG - Table Information
+Displays detailed information about a table's structure and contents.
+
+**Syntax:**
+```sql
+> debug
+Enter table name: <table_name>
+```
+
+**Example:**
+```sql
+> debug
+Enter table name: products
+Table: products
+Columns: [id, name, price, category]
+Types: [INT64, BYTES, INT64, BYTES]
+Total records found: 45
+Sample records displayed above
+```
+
+Helps you understand table schemas and verify data integrity.
+
+### Practical Examples
+
+**Monthly Sales Analysis:**
+```sql
+# Get total sales count
+> count
+Enter table name: monthly_sales
+
+# Calculate total revenue
+> sum
+Enter table name: monthly_sales
+Enter column name for SUM: revenue
+
+# Find average order value
+> avg
+Enter table name: monthly_sales
+Enter column name for AVG: order_value
+```
+
+**Product Inventory Insights:**
+```sql
+# Check inventory levels
+> min
+Enter table name: inventory
+Enter column name for MIN: stock_level
+
+# Find most expensive item
+> max
+Enter table name: inventory
+Enter column name for MAX: unit_price
+
+# Review all products
+> scan
+Enter table name: inventory
+```
+
+These aggregate functions work efficiently with FiloDB's B+ tree storage engine, making data analysis fast even with thousands of records.
 
 ## Data Types
 

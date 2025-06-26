@@ -48,6 +48,14 @@ func RegisterCommands() map[string]Command {
 		"commit": func(scanner *bufio.Reader, db *DB, currentTX *DBTX) {},
 		"stats":  HandleStats,
 		"help":   HandleHelp,
+		// Aggregate functions
+		"count": HandleCount,
+		"sum":   HandleSum,
+		"avg":   HandleAvg,
+		"min":   HandleMin,
+		"max":   HandleMax,
+		"scan":  HandleTableScan,
+		"debug": HandleDebugTable,
 	}
 }
 
