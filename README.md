@@ -67,7 +67,7 @@ FiloDB is a lightweight relational database management system designed for appli
 - **Free List Management**: Efficient storage space management and reuse
 
 ### Data Management
-- **Two Data Types**: INT64 (integers) and BYTES (strings/binary data)
+- **Five Data Types**: INT64 (integers), BYTES (strings/binary), FLOAT64 (decimals), BOOLEAN (true/false), DATETIME (timestamps)
 - **Flexible Schema**: Define tables with custom columns and types
 - **Index Support**: Composite indexes for complex queries
 - **Range Queries**: Efficient data retrieval with comparison operators
@@ -171,8 +171,8 @@ Table 'users' created successfully.
 > insert
 Enter table name: users
 Enter value for id: 1
-Enter value for name: Sharvit Kashikar 
-Enter value for email: sharvit@kashikar.com
+Enter value for name: Arjun Singh
+Enter value for email: arjun.singh@techcorp.in
 Enter value for age: 30
 Record inserted successfully.
 ```
@@ -191,9 +191,45 @@ Enter value for id: 1
 
 Result:
 id: 1
-name: Sharvit Kashikar
-email: sharvit@kashikar.com
+name: Arjun Singh
+email: arjun.singh@techcorp.in
 age: 30
+```
+
+### 5. Advanced Example with New Data Types
+```sql
+# Create a products table with all data types
+> create
+Enter table name: products
+Enter column names (comma-separated): id,name,price,active,created_at
+Enter column types (comma-separated as numbers): 1,2,3,4,5
+Enter indexes (format: col1+col2,col3, ... or leave empty): active,created_at
+Table 'products' created successfully.
+
+# Insert a product with new data types
+> insert
+Enter table name: products
+Enter value for id: 101
+Enter value for name: Wireless Headphones
+Enter value for price: 299.99
+Enter value for active: true
+Enter value for created_at: 2024-03-15 09:30:00
+Record inserted successfully.
+
+# Query products by date range
+> get
+Enter table name: products
+Select query type: 2
+Enter column name for range lookup(index col): created_at
+Enter start range value: 2024-03-01
+Enter end range value: 2024-03-31
+
+Result:
+id: 101
+name: Wireless Headphones
+price: 299.990000
+active: true
+created_at: 2024-03-15 09:30:00
 ```
 
 ## Performance
@@ -232,7 +268,7 @@ Enter indexes (format: col1+col2,col3, ... or leave empty): <optional_indexes>
 > create
 Enter table name: products
 Enter column names (comma-separated): id,name,price,category
-Enter column types (comma-separated as numbers): 1,2,1,2
+Enter column types (comma-separated as numbers): 1,2,3,2
 Enter indexes (format: col1+col2,col3, ... or leave empty): category,name+category
 Table 'products' created successfully.
 ```
@@ -254,8 +290,8 @@ Enter value for <column2>: <value2>
 > insert
 Enter table name: products
 Enter value for id: 101
-Enter value for name: Laptop
-Enter value for price: 999
+Enter value for name: Gaming Laptop
+Enter value for price: 75999.50
 Enter value for category: Electronics
 Record inserted successfully.
 ```
@@ -307,8 +343,8 @@ Enter value for <column1>: <new_value1>
 > update
 Enter table name: products
 Enter value for id: 101
-Enter value for name: Gaming Laptop
-Enter value for price: 1299
+Enter value for name: Premium Gaming Laptop
+Enter value for price: 89999.00
 Enter value for category: Electronics
 Record updated successfully.
 ```
@@ -417,6 +453,8 @@ Records processed: 1,250
 SUM(amount): 485,750
 ```
 
+**Supported Types**: INT64, FLOAT64
+
 Great for calculating totals like revenue, quantities, or any numeric aggregations.
 
 #### AVG - Find Averages
@@ -437,13 +475,15 @@ Enter column name for AVG: price
 Table: products
 Column: price
 Records processed: 45
-AVG(price): 324
+AVG(price): 324.500000
 ```
+
+**Supported Types**: INT64, FLOAT64
 
 This helps you understand typical values like average order amounts or product prices.
 
 #### MIN - Find Minimum Values
-Finds the smallest value in a column (works with both numbers and text).
+Finds the smallest value in a column (works with all data types).
 
 **Syntax:**
 ```sql
@@ -460,11 +500,13 @@ Enter column name for MIN: price
 Table: products
 Column: price
 Records processed: 45
-MIN(price): 12
+MIN(price): 12.500000
 ```
 
+**Supported Types**: All types (INT64, BYTES, FLOAT64, BOOLEAN, DATETIME)
+
 #### MAX - Find Maximum Values
-Finds the largest value in a column (works with both numbers and text).
+Finds the largest value in a column (works with all data types).
 
 **Syntax:**
 ```sql
@@ -481,8 +523,10 @@ Enter column name for MAX: amount
 Table: sales
 Column: amount
 Records processed: 1,250
-MAX(amount): 2,500
+MAX(amount): 2500.000000
 ```
+
+**Supported Types**: All types (INT64, BYTES, FLOAT64, BOOLEAN, DATETIME)
 
 ### Utility Commands
 
@@ -531,45 +575,45 @@ Helps you understand table schemas and verify data integrity.
 
 ### Practical Examples
 
-**Monthly Sales Analysis:**
+**Monthly Sales Analysis for Mumbai Store:**
 ```sql
 # Get total sales count
 > count
-Enter table name: monthly_sales
+Enter table name: mumbai_sales
 
-# Calculate total revenue
+# Calculate total revenue  
 > sum
-Enter table name: monthly_sales
+Enter table name: mumbai_sales
 Enter column name for SUM: revenue
 
 # Find average order value
 > avg
-Enter table name: monthly_sales
+Enter table name: mumbai_sales
 Enter column name for AVG: order_value
 ```
 
-**Product Inventory Insights:**
+**Delhi Warehouse Inventory Insights:**
 ```sql
-# Check inventory levels
+# Check minimum stock levels
 > min
-Enter table name: inventory
+Enter table name: delhi_inventory
 Enter column name for MIN: stock_level
 
 # Find most expensive item
 > max
-Enter table name: inventory
+Enter table name: delhi_inventory
 Enter column name for MAX: unit_price
 
 # Review all products
 > scan
-Enter table name: inventory
+Enter table name: delhi_inventory
 ```
 
 These aggregate functions work efficiently with FiloDB's B+ tree storage engine, making data analysis fast even with thousands of records.
 
 ## Data Types
 
-FiloDB supports two fundamental data types that cover most use cases:
+FiloDB supports five fundamental data types that cover most use cases:
 
 ### 1. INT64 (Type ID: 1)
 - **Purpose**: 64-bit signed integers
@@ -580,18 +624,45 @@ FiloDB supports two fundamental data types that cover most use cases:
 ### 2. BYTES (Type ID: 2)
 - **Purpose**: Variable-length byte arrays (strings/binary data)
 - **Use Cases**: Names, emails, descriptions, JSON data, file contents
-- **Examples**: `"Rahul Gupta"`, `"rahul@techcorp.in"`, `"Product description"`
+- **Examples**: `"Ananya Patel"`, `"ananya@startupindia.com"`, `"Premium smartphone with dual camera"`
+
+### 3. FLOAT64 (Type ID: 3)
+- **Purpose**: 64-bit floating-point numbers
+- **Range**: IEEE 754 double precision floating point
+- **Use Cases**: Prices, percentages, scientific calculations, measurements
+- **Examples**: `3.14159`, `1299.50`, `45999.99`, `2.5e6` (for scientific calculations)
+
+### 4. BOOLEAN (Type ID: 4)
+- **Purpose**: True/false values
+- **Use Cases**: Flags, status indicators, yes/no questions, active/inactive states
+- **Input Formats**: `true`/`false`, `1`/`0`, `yes`/`no`, `y`/`n` (case insensitive)
+- **Examples**: `true`, `false`, `1`, `0`
+
+### 5. DATETIME (Type ID: 5)
+- **Purpose**: Date and time values
+- **Storage**: Unix timestamp (seconds since epoch)
+- **Use Cases**: Created dates, timestamps, scheduling, logging
+- **Input Formats**:
+  - `2024-01-15 14:30:00` (YYYY-MM-DD HH:MM:SS)
+  - `2024-01-15` (YYYY-MM-DD, defaults to 00:00:00)
+  - `2024-01-15T14:30:00Z` (ISO 8601)
+  - Unix timestamps as integers (e.g., `1705320600`)
+- **Display Format**: `2024-01-15 14:30:00`
 
 ### Type Specification Examples
 
 ```sql
-# User table with mixed types
-Enter column types: 1,2,2,1
-# Corresponds to: id(INT64), name(BYTES), email(BYTES), age(INT64)
+# Customer database for Indian e-commerce
+Enter column types: 1,2,2,1,4
+# Corresponds to: id(INT64), name(BYTES), email(BYTES), age(INT64), premium_member(BOOLEAN)
 
-# Product catalog
-Enter column types: 1,2,1,2,1
-# Corresponds to: id(INT64), name(BYTES), price(INT64), category(BYTES), stock(INT64)
+# Product catalog for electronics store
+Enter column types: 1,2,3,2,1,5
+# Corresponds to: id(INT64), name(BYTES), price(FLOAT64), category(BYTES), stock(INT64), created_at(DATETIME)
+
+# Order tracking system
+Enter column types: 1,2,5,4,3
+# Corresponds to: order_id(INT64), customer_name(BYTES), order_date(DATETIME), delivered(BOOLEAN), amount(FLOAT64)
 ```
 
 ## Advanced Usage
@@ -636,7 +707,7 @@ Benefits:
 
 ### Transaction Best Practices
 
-#### Example: Bank Transfer
+#### Example: Bank Transfer (Priya to Rahul)
 ```sql
 > begin
 Transaction started.
@@ -644,12 +715,14 @@ Transaction started.
 > update
 Enter table name: accounts
 Enter value for id: 123
-Enter value for balance: 1500  # Decreased by 500
+Enter value for account_holder: Priya Sharma
+Enter value for balance: 25000  # Decreased by 5000
 
 > update  
 Enter table name: accounts
 Enter value for id: 456
-Enter value for balance: 2500  # Increased by 500
+Enter value for account_holder: Rahul Gupta
+Enter value for balance: 35000  # Increased by 5000
 
 > commit
 Transaction committed successfully.

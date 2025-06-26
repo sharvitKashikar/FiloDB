@@ -104,7 +104,8 @@ func (ts *TableScanner) Next() (*Record, bool, bool) {
 		Vals: make([]Value, len(ts.tdef.Cols)),
 	}
 	for i := range rec.Cols {
-		rec.Vals[i].Type = ts.tdef.Types[i]
+		// Properly initialize each Value struct to zero state before setting type
+		rec.Vals[i] = Value{Type: ts.tdef.Types[i]}
 	}
 	copy(rec.Cols, ts.tdef.Cols)
 	decodeValues(key[4:], rec.Vals[:ts.tdef.PKeys])
@@ -128,7 +129,8 @@ func (ts *TableScanner) Current() (*Record, error) {
 		Vals: make([]Value, len(ts.tdef.Cols)),
 	}
 	for i := range rec.Cols {
-		rec.Vals[i].Type = ts.tdef.Types[i]
+		// Properly initialize each Value struct to zero state before setting type
+		rec.Vals[i] = Value{Type: ts.tdef.Types[i]}
 	}
 	decodeValues(key[4:], rec.Vals[:ts.tdef.PKeys])
 	decodeValues(val, rec.Vals[ts.tdef.PKeys:])
@@ -145,6 +147,12 @@ func compareValues(v1, v2 Value) bool {
 		return v1.I64 == v2.I64
 	case TYPE_BYTES:
 		return bytes.Equal(v1.Str, v2.Str)
+	case TYPE_FLOAT64:
+		return v1.F64 == v2.F64
+	case TYPE_BOOLEAN:
+		return v1.Bool == v2.Bool
+	case TYPE_DATETIME:
+		return v1.Time.Equal(v2.Time)
 	default:
 		return false
 	}

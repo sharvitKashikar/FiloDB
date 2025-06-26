@@ -1,12 +1,14 @@
 package database
 
 import (
+	"bytes"
 	"errors"
 	"fmt"
 	"log"
 	"os"
 	"strings"
 	"testing"
+	"time"
 )
 
 func TestCreate(t *testing.T) {
@@ -449,6 +451,163 @@ func TestGet(t *testing.T) {
 				}
 			}
 			db.kv.EndRead(&reader)
+		})
+	}
+}
+
+func TestNewDataTypes(t *testing.T) {
+	db := setupTestDB(t)
+	defer cleanupTestDB(t, db)
+
+	// Test FLOAT64, BOOLEAN, and DATETIME types
+	tests := []struct {
+		name     string
+		tableDef *TableDef
+		record   Record
+	}{
+		{
+			name: "FLOAT64 table",
+			tableDef: &TableDef{
+				Name:  "prices",
+				Types: []uint32{TYPE_INT64, TYPE_FLOAT64},
+				Cols:  []string{"id", "price"},
+				PKeys: 1,
+			},
+			record: Record{
+				Cols: []string{"id", "price"},
+				Vals: []Value{
+					{Type: TYPE_INT64, I64: 1},
+					{Type: TYPE_FLOAT64, F64: 299.99},
+				},
+			},
+		},
+		{
+			name: "BOOLEAN table",
+			tableDef: &TableDef{
+				Name:  "flags",
+				Types: []uint32{TYPE_INT64, TYPE_BOOLEAN},
+				Cols:  []string{"id", "active"},
+				PKeys: 1,
+			},
+			record: Record{
+				Cols: []string{"id", "active"},
+				Vals: []Value{
+					{Type: TYPE_INT64, I64: 1},
+					{Type: TYPE_BOOLEAN, Bool: true},
+				},
+			},
+		},
+		{
+			name: "DATETIME table",
+			tableDef: &TableDef{
+				Name:  "events",
+				Types: []uint32{TYPE_INT64, TYPE_DATETIME},
+				Cols:  []string{"id", "timestamp"},
+				PKeys: 1,
+			},
+			record: Record{
+				Cols: []string{"id", "timestamp"},
+				Vals: []Value{
+					{Type: TYPE_INT64, I64: 1},
+					{Type: TYPE_DATETIME, Time: time.Unix(1705320600, 0)},
+				},
+			},
+		},
+		{
+			name: "Mixed types table",
+			tableDef: &TableDef{
+				Name:  "mixed",
+				Types: []uint32{TYPE_INT64, TYPE_BYTES, TYPE_FLOAT64, TYPE_BOOLEAN, TYPE_DATETIME},
+				Cols:  []string{"id", "name", "score", "active", "created"},
+				PKeys: 1,
+			},
+			record: Record{
+				Cols: []string{"id", "name", "score", "active", "created"},
+				Vals: []Value{
+					{Type: TYPE_INT64, I64: 1},
+					{Type: TYPE_BYTES, Str: []byte("Test Item")},
+					{Type: TYPE_FLOAT64, F64: 95.5},
+					{Type: TYPE_BOOLEAN, Bool: false},
+					{Type: TYPE_DATETIME, Time: time.Unix(1705320600, 0)},
+				},
+			},
+		},
+	}
+
+	for _, tt := range tests {
+		t.Run(tt.name, func(t *testing.T) {
+			var writer KVTX
+
+			// Test table creation
+			db.kv.Begin(&writer)
+			err := db.TableNew(tt.tableDef, &writer)
+			if err != nil {
+				t.Fatalf("failed to create table: %v", err)
+			}
+			db.kv.Commit(&writer)
+
+			// Test record insertion
+			db.kv.Begin(&writer)
+			inserted, err := db.Insert(tt.tableDef.Name, tt.record, &writer)
+			if err != nil {
+				t.Fatalf("failed to insert record: %v", err)
+			}
+			if !inserted {
+				t.Fatal("record was not inserted")
+			}
+			db.kv.Commit(&writer)
+
+			// Test record retrieval
+			var reader KVReader
+			db.kv.BeginRead(&reader)
+
+			// Create a record with just the primary key for retrieval
+			primaryKeyRecord := Record{
+				Cols: []string{tt.tableDef.Cols[0]}, // Only primary key column
+				Vals: []Value{tt.record.Vals[0]},    // Only primary key value
+			}
+
+			found, err := db.Get(tt.tableDef.Name, &primaryKeyRecord, &reader)
+			db.kv.EndRead(&reader)
+
+			if err != nil {
+				t.Fatalf("failed to retrieve record: %v", err)
+			}
+			if !found {
+				t.Fatal("record was not found")
+			}
+
+			// Verify all values match (primaryKeyRecord now contains the full record)
+			for i, expectedVal := range tt.record.Vals {
+				actualVal := primaryKeyRecord.Vals[i]
+				if actualVal.Type != expectedVal.Type {
+					t.Errorf("Type mismatch at index %d: expected %d, got %d", i, expectedVal.Type, actualVal.Type)
+					continue
+				}
+
+				switch expectedVal.Type {
+				case TYPE_INT64:
+					if actualVal.I64 != expectedVal.I64 {
+						t.Errorf("INT64 mismatch at index %d: expected %d, got %d", i, expectedVal.I64, actualVal.I64)
+					}
+				case TYPE_BYTES:
+					if !bytes.Equal(actualVal.Str, expectedVal.Str) {
+						t.Errorf("BYTES mismatch at index %d: expected %s, got %s", i, string(expectedVal.Str), string(actualVal.Str))
+					}
+				case TYPE_FLOAT64:
+					if actualVal.F64 != expectedVal.F64 {
+						t.Errorf("FLOAT64 mismatch at index %d: expected %f, got %f", i, expectedVal.F64, actualVal.F64)
+					}
+				case TYPE_BOOLEAN:
+					if actualVal.Bool != expectedVal.Bool {
+						t.Errorf("BOOLEAN mismatch at index %d: expected %t, got %t", i, expectedVal.Bool, actualVal.Bool)
+					}
+				case TYPE_DATETIME:
+					if !actualVal.Time.Equal(expectedVal.Time) {
+						t.Errorf("DATETIME mismatch at index %d: expected %v, got %v", i, expectedVal.Time, actualVal.Time)
+					}
+				}
+			}
 		})
 	}
 }

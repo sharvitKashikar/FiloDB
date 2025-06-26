@@ -1,0 +1,52 @@
+create
+products
+id,name,price,in_stock,created_at
+1,2,3,4,5
+
+
+insert
+products
+1
+Gaming Laptop
+1299.99
+true
+2024-03-15 14:30:00
+
+insert
+products
+2
+Wireless Mouse
+29.99
+false
+2024-03-10 09:15:30
+
+get
+products
+1
+1
+id
+1
+
+scan
+products
+
+count
+products
+
+sum
+products
+price
+
+avg
+products
+price
+
+min
+products
+created_at
+
+max
+products
+price
+
+exit 

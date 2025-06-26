@@ -5,12 +5,17 @@ import (
 	"encoding/binary"
 	"encoding/json"
 	"fmt"
+	"math"
+	"time"
 )
 
 const (
-	TYPE_ERROR = 0
-	TYPE_INT64 = 1
-	TYPE_BYTES = 2
+	TYPE_ERROR    = 0
+	TYPE_INT64    = 1
+	TYPE_BYTES    = 2
+	TYPE_FLOAT64  = 3 // NEW: 64-bit floating point numbers
+	TYPE_BOOLEAN  = 4 // NEW: Boolean values (true/false)
+	TYPE_DATETIME = 5 // NEW: Date and time values
 )
 
 // table row
@@ -24,6 +29,9 @@ type Value struct {
 	Type uint32
 	I64  int64
 	Str  []byte
+	F64  float64   // NEW: for FLOAT64 type
+	Bool bool      // NEW: for BOOLEAN type
+	Time time.Time // NEW: for DATETIME type
 }
 
 type DB struct {
@@ -75,6 +83,25 @@ func (rec *Record) AddStr(key string, val []byte) *Record {
 func (rec *Record) AddInt64(key string, val int64) *Record {
 	rec.Cols = append(rec.Cols, key)
 	rec.Vals = append(rec.Vals, Value{Type: 1, I64: val})
+	return rec
+}
+
+// NEW: Helper methods for new data types
+func (rec *Record) AddFloat64(key string, val float64) *Record {
+	rec.Cols = append(rec.Cols, key)
+	rec.Vals = append(rec.Vals, Value{Type: TYPE_FLOAT64, F64: val})
+	return rec
+}
+
+func (rec *Record) AddBool(key string, val bool) *Record {
+	rec.Cols = append(rec.Cols, key)
+	rec.Vals = append(rec.Vals, Value{Type: TYPE_BOOLEAN, Bool: val})
+	return rec
+}
+
+func (rec *Record) AddDateTime(key string, val time.Time) *Record {
+	rec.Cols = append(rec.Cols, key)
+	rec.Vals = append(rec.Vals, Value{Type: TYPE_DATETIME, Time: val})
 	return rec
 }
 
@@ -192,6 +219,22 @@ func encodeValues(out []byte, vals []Value) []byte {
 			}
 			out = append(out, escapeString(v.Str)...)
 			out = append(out, 0)
+		case TYPE_FLOAT64: // NEW: Serialize FLOAT64
+			var buf [8]byte
+			binary.BigEndian.PutUint64(buf[:], math.Float64bits(v.F64))
+			out = append(out, buf[:]...)
+		case TYPE_BOOLEAN: // NEW: Serialize BOOLEAN
+			if v.Bool {
+				out = append(out, 1)
+			} else {
+				out = append(out, 0)
+			}
+		case TYPE_DATETIME: // NEW: Serialize DATETIME as Unix timestamp
+			var buf [8]byte
+			unixTime := v.Time.Unix()
+			u := uint64(unixTime) + (1 << 63) // Same encoding as INT64 for consistent ordering
+			binary.BigEndian.PutUint64(buf[:], u)
+			out = append(out, buf[:]...)
 		default:
 			panic("invalid type while encodeValues")
 		}
@@ -222,6 +265,30 @@ func decodeValues(in []byte, out []Value) {
 			unEscStr := unEscapeString(remaining[:end])
 			out[i] = Value{Type: TYPE_BYTES, Str: unEscStr}
 			remaining = remaining[end+1:]
+		case TYPE_FLOAT64: // NEW: Deserialize FLOAT64
+			if len(remaining) < 8 {
+				return
+			}
+			bits := binary.BigEndian.Uint64(remaining[:8])
+			val := math.Float64frombits(bits)
+			out[i] = Value{Type: TYPE_FLOAT64, F64: val}
+			remaining = remaining[8:]
+		case TYPE_BOOLEAN: // NEW: Deserialize BOOLEAN
+			if len(remaining) < 1 {
+				return
+			}
+			val := remaining[0] != 0
+			out[i] = Value{Type: TYPE_BOOLEAN, Bool: val}
+			remaining = remaining[1:]
+		case TYPE_DATETIME: // NEW: Deserialize DATETIME from Unix timestamp
+			if len(remaining) < 8 {
+				return
+			}
+			u := binary.BigEndian.Uint64(remaining[:8])
+			unixTime := int64(u - (1 << 63))
+			val := time.Unix(unixTime, 0).UTC() // Ensure UTC timezone consistency
+			out[i] = Value{Type: TYPE_DATETIME, Time: val}
+			remaining = remaining[8:]
 		default:
 			panic("invalid type while decodeValues")
 		}

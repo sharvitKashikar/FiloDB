@@ -352,7 +352,7 @@ func tableDefCheck(tdef *TableDef) error {
 		}
 		columnNames[col] = true
 
-		if tdef.Types[i] != TYPE_BYTES && tdef.Types[i] != TYPE_INT64 {
+		if tdef.Types[i] != TYPE_BYTES && tdef.Types[i] != TYPE_INT64 && tdef.Types[i] != TYPE_FLOAT64 && tdef.Types[i] != TYPE_BOOLEAN && tdef.Types[i] != TYPE_DATETIME {
 			return fmt.Errorf("invalid data type for column %s", col)
 		}
 	}

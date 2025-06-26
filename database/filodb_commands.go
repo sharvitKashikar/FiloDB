@@ -9,6 +9,7 @@ import (
 	"filodb/database/helper"
 	"fmt"
 	"strings"
+	"time"
 )
 
 type Command func(scanner *bufio.Reader, db *DB, currentTX *DBTX)
@@ -126,6 +127,52 @@ func HandleInsert(scanner *bufio.Reader, db *DB, currentTX *DBTX) {
 					isValidInput = true
 				} else {
 					fmt.Printf("Invalid input. Please enter again:\n")
+				}
+			} else if tdef.Types[i] == TYPE_FLOAT64 {
+				var floatVal float64
+				_, err := fmt.Sscanf(valStr, "%f", &floatVal)
+				if err == nil {
+					val = Value{Type: TYPE_FLOAT64, F64: floatVal}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid float input. Please enter a valid number (e.g., 3.14):\n")
+				}
+			} else if tdef.Types[i] == TYPE_BOOLEAN {
+				valStrLower := strings.ToLower(valStr)
+				if valStrLower == "true" || valStrLower == "1" || valStrLower == "yes" || valStrLower == "y" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: true}
+					isValidInput = true
+				} else if valStrLower == "false" || valStrLower == "0" || valStrLower == "no" || valStrLower == "n" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: false}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid boolean input. Please enter true/false, 1/0, yes/no, or y/n:\n")
+				}
+			} else if tdef.Types[i] == TYPE_DATETIME {
+				var parsedTime time.Time
+				var err error
+
+				// Parse as UTC to ensure consistent timezone handling
+				parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", valStr, time.UTC)
+				if err != nil {
+					parsedTime, err = time.ParseInLocation("2006-01-02", valStr, time.UTC)
+				}
+				if err != nil {
+					parsedTime, err = time.Parse(time.RFC3339, valStr)
+				}
+				if err != nil {
+					var timestamp int64
+					_, err = fmt.Sscanf(valStr, "%d", &timestamp)
+					if err == nil {
+						parsedTime = time.Unix(timestamp, 0).UTC()
+					}
+				}
+
+				if err == nil {
+					val = Value{Type: TYPE_DATETIME, Time: parsedTime}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid datetime input. Please use format: YYYY-MM-DD HH:MM:SS, YYYY-MM-DD, ISO 8601, or Unix timestamp:\n")
 				}
 			}
 		}
@@ -310,6 +357,52 @@ func HandleDelete(scanner *bufio.Reader, db *DB, currentTX *DBTX) {
 				} else {
 					fmt.Printf("Invalid input. Please enter again:\n")
 				}
+			} else if tdef.Types[i] == TYPE_FLOAT64 {
+				var floatVal float64
+				_, err := fmt.Sscanf(valStr, "%f", &floatVal)
+				if err == nil {
+					val = Value{Type: TYPE_FLOAT64, F64: floatVal}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid float input. Please enter a valid number (e.g., 3.14):\n")
+				}
+			} else if tdef.Types[i] == TYPE_BOOLEAN {
+				valStrLower := strings.ToLower(valStr)
+				if valStrLower == "true" || valStrLower == "1" || valStrLower == "yes" || valStrLower == "y" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: true}
+					isValidInput = true
+				} else if valStrLower == "false" || valStrLower == "0" || valStrLower == "no" || valStrLower == "n" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: false}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid boolean input. Please enter true/false, 1/0, yes/no, or y/n:\n")
+				}
+			} else if tdef.Types[i] == TYPE_DATETIME {
+				var parsedTime time.Time
+				var err error
+
+				// Parse as UTC to ensure consistent timezone handling
+				parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", valStr, time.UTC)
+				if err != nil {
+					parsedTime, err = time.ParseInLocation("2006-01-02", valStr, time.UTC)
+				}
+				if err != nil {
+					parsedTime, err = time.Parse(time.RFC3339, valStr)
+				}
+				if err != nil {
+					var timestamp int64
+					_, err = fmt.Sscanf(valStr, "%d", &timestamp)
+					if err == nil {
+						parsedTime = time.Unix(timestamp, 0).UTC()
+					}
+				}
+
+				if err == nil {
+					val = Value{Type: TYPE_DATETIME, Time: parsedTime}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid datetime input. Please use format: YYYY-MM-DD HH:MM:SS, YYYY-MM-DD, ISO 8601, or Unix timestamp:\n")
+				}
 			}
 		}
 
@@ -381,6 +474,52 @@ func HandleUpdate(scanner *bufio.Reader, db *DB, currentTX *DBTX) {
 					isValidInput = true
 				} else {
 					fmt.Printf("Invalid input. Please enter again: ")
+				}
+			} else if tdef.Types[i] == TYPE_FLOAT64 {
+				var floatVal float64
+				_, err := fmt.Sscanf(valStr, "%f", &floatVal)
+				if err == nil {
+					val = Value{Type: TYPE_FLOAT64, F64: floatVal}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid float input. Please enter a valid number (e.g., 3.14): ")
+				}
+			} else if tdef.Types[i] == TYPE_BOOLEAN {
+				valStrLower := strings.ToLower(valStr)
+				if valStrLower == "true" || valStrLower == "1" || valStrLower == "yes" || valStrLower == "y" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: true}
+					isValidInput = true
+				} else if valStrLower == "false" || valStrLower == "0" || valStrLower == "no" || valStrLower == "n" {
+					val = Value{Type: TYPE_BOOLEAN, Bool: false}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid boolean input. Please enter true/false, 1/0, yes/no, or y/n: ")
+				}
+			} else if tdef.Types[i] == TYPE_DATETIME {
+				var parsedTime time.Time
+				var err error
+
+				// Parse as UTC to ensure consistent timezone handling
+				parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", valStr, time.UTC)
+				if err != nil {
+					parsedTime, err = time.ParseInLocation("2006-01-02", valStr, time.UTC)
+				}
+				if err != nil {
+					parsedTime, err = time.Parse(time.RFC3339, valStr)
+				}
+				if err != nil {
+					var timestamp int64
+					_, err = fmt.Sscanf(valStr, "%d", &timestamp)
+					if err == nil {
+						parsedTime = time.Unix(timestamp, 0).UTC()
+					}
+				}
+
+				if err == nil {
+					val = Value{Type: TYPE_DATETIME, Time: parsedTime}
+					isValidInput = true
+				} else {
+					fmt.Printf("Invalid datetime input. Please use format: YYYY-MM-DD HH:MM:SS, YYYY-MM-DD, ISO 8601, or Unix timestamp: ")
 				}
 			}
 		}
@@ -483,10 +622,36 @@ func processQueryRequest(req QueryRequest, db *DB) {
 		idx := ColIndex(tdef, col)
 		if tdef.Types[idx] == TYPE_BYTES {
 			startRecord.Vals[i] = Value{Type: TYPE_BYTES, Str: []byte(req.startVals[i])}
-		} else {
+		} else if tdef.Types[idx] == TYPE_INT64 {
 			var key int64
 			fmt.Sscanf(req.startVals[i], "%d", &key)
 			startRecord.Vals[i] = Value{Type: TYPE_INT64, I64: key}
+		} else if tdef.Types[idx] == TYPE_FLOAT64 {
+			var floatVal float64
+			fmt.Sscanf(req.startVals[i], "%f", &floatVal)
+			startRecord.Vals[i] = Value{Type: TYPE_FLOAT64, F64: floatVal}
+		} else if tdef.Types[idx] == TYPE_BOOLEAN {
+			valStrLower := strings.ToLower(req.startVals[i])
+			boolVal := valStrLower == "true" || valStrLower == "1" || valStrLower == "yes" || valStrLower == "y"
+			startRecord.Vals[i] = Value{Type: TYPE_BOOLEAN, Bool: boolVal}
+		} else if tdef.Types[idx] == TYPE_DATETIME {
+			var parsedTime time.Time
+			var err error
+
+			// Parse as UTC to ensure consistent timezone handling
+			parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", req.startVals[i], time.UTC)
+			if err != nil {
+				parsedTime, err = time.ParseInLocation("2006-01-02", req.startVals[i], time.UTC)
+			}
+			if err != nil {
+				parsedTime, err = time.Parse(time.RFC3339, req.startVals[i])
+			}
+			if err != nil {
+				var timestamp int64
+				fmt.Sscanf(req.startVals[i], "%d", &timestamp)
+				parsedTime = time.Unix(timestamp, 0).UTC()
+			}
+			startRecord.Vals[i] = Value{Type: TYPE_DATETIME, Time: parsedTime}
 		}
 		startRecord.Cols[i] = col
 	}
@@ -528,10 +693,36 @@ func processQueryRequest(req QueryRequest, db *DB) {
 		idx := ColIndex(tdef, col)
 		if tdef.Types[idx] == TYPE_BYTES {
 			endRecord.Vals[i] = Value{Type: TYPE_BYTES, Str: []byte(req.endVals[i])}
-		} else {
+		} else if tdef.Types[idx] == TYPE_INT64 {
 			var key int64
 			fmt.Sscanf(req.endVals[i], "%d", &key)
 			endRecord.Vals[i] = Value{Type: TYPE_INT64, I64: key}
+		} else if tdef.Types[idx] == TYPE_FLOAT64 {
+			var floatVal float64
+			fmt.Sscanf(req.endVals[i], "%f", &floatVal)
+			endRecord.Vals[i] = Value{Type: TYPE_FLOAT64, F64: floatVal}
+		} else if tdef.Types[idx] == TYPE_BOOLEAN {
+			valStrLower := strings.ToLower(req.endVals[i])
+			boolVal := valStrLower == "true" || valStrLower == "1" || valStrLower == "yes" || valStrLower == "y"
+			endRecord.Vals[i] = Value{Type: TYPE_BOOLEAN, Bool: boolVal}
+		} else if tdef.Types[idx] == TYPE_DATETIME {
+			var parsedTime time.Time
+			var err error
+
+			// Parse as UTC to ensure consistent timezone handling
+			parsedTime, err = time.ParseInLocation("2006-01-02 15:04:05", req.endVals[i], time.UTC)
+			if err != nil {
+				parsedTime, err = time.ParseInLocation("2006-01-02", req.endVals[i], time.UTC)
+			}
+			if err != nil {
+				parsedTime, err = time.Parse(time.RFC3339, req.endVals[i])
+			}
+			if err != nil {
+				var timestamp int64
+				fmt.Sscanf(req.endVals[i], "%d", &timestamp)
+				parsedTime = time.Unix(timestamp, 0).UTC()
+			}
+			endRecord.Vals[i] = Value{Type: TYPE_DATETIME, Time: parsedTime}
 		}
 		endRecord.Cols[i] = col
 	}
@@ -562,12 +753,21 @@ func verifyColumns(tdef *TableDef, cols []string) error {
 
 func formatValue(v Value) string {
 	switch v.Type {
-	case 1:
+	case TYPE_INT64:
 		return fmt.Sprintf("%d", v.I64)
-	case 2:
+	case TYPE_BYTES:
 		return string(v.Str)
+	case TYPE_FLOAT64:
+		return fmt.Sprintf("%.6f", v.F64)
+	case TYPE_BOOLEAN:
+		if v.Bool {
+			return "true"
+		}
+		return "false"
+	case TYPE_DATETIME:
+		return v.Time.UTC().Format("2006-01-02 15:04:05")
 	default:
-		return "Unknown"
+		return "unknown"
 	}
 }
 
