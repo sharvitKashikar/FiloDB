@@ -539,6 +539,112 @@ go test -v ./database/
 - Documentation improvements
 - Cross-platform testing
 
+## References and Learning Resources
+
+This project was built while learning database internals from various excellent resources. While the core B+ tree concepts are foundational to any database implementation, FiloDB extends far beyond basic tutorials with significant additional features.
+
+### Primary Learning Resources
+
+#### "Build Your Own Database From Scratch in Go" by James Smith
+- **What the book covers**: Basic B+ tree implementation, simple key-value operations, fundamental persistence
+- **What FiloDB extends**: The book provides an excellent foundation for understanding B+ tree mechanics and basic database concepts
+
+#### Database Internals Books & Resources
+- **"Database Internals" by Alex Petrov** - Deep dive into storage engines and distributed systems
+- **"Designing Data-Intensive Applications" by Martin Kleppmann** - System design patterns and data architecture
+- **MIT 6.824 Distributed Systems** - Academic foundation for database design
+- **CMU Database Systems Course** - Implementation techniques and optimization strategies
+
+### Open Source Database Codebases
+- **[SQLite source code](https://www.sqlite.org/src/doc/trunk/README.md)** - Production-quality B+ tree implementation
+- **[BuntDB](https://github.com/tidwall/buntdb)** - Go-based in-memory database with spatial indexing
+- **[BadgerDB](https://github.com/dgraph-io/badger)** - LSM-tree based key-value store in Go
+- **[BoltDB](https://github.com/boltdb/bolt)** - Pure Go key/value store (archived but educational)
+
+## What FiloDB Implements Beyond the Book
+
+The original "Build Your Own Database From Scratch" book covers fundamental concepts, but FiloDB extends these with production-ready features:
+
+### **Advanced Data Type System** (Not in book)
+| Feature | Book Coverage | FiloDB Implementation |
+|---------|---------------|----------------------|
+| **Data Types** | Basic byte arrays only | **5 complete types**: INT64, BYTES, FLOAT64, BOOLEAN, DATETIME |
+| **Type Safety** | No validation | Full type checking and validation |
+| **Date Handling** | Not covered | Multiple input formats, timezone handling |
+| **Boolean Support** | Not covered | Flexible input: true/false, 1/0, yes/no |
+
+### **Complete Aggregate Functions** (Not in book)
+```go
+// Book: No aggregate functions
+// FiloDB: Full mathematical operations
+COUNT()  // Count records in table
+SUM()    // Sum numeric columns (INT64 + FLOAT64)
+AVG()    // Calculate averages with precision
+MIN()    // Find minimum values (all data types)
+MAX()    // Find maximum values (all data types)
+```
+
+### **Advanced Query Engine** (Beyond book scope)
+| Query Type | Book | FiloDB |
+|------------|------|--------|
+| **Point Lookup** | Basic | Optimized with composite indexes |
+| **Range Queries** | Not covered | Full range scanning on indexed columns |
+| **Column Filtering** | Not covered | Table scan with predicate filtering |
+| **Composite Indexes** | Not covered | Multi-column index support |
+
+### **Production-Ready Storage** (Enhanced from book)
+```go
+// Book: Basic file I/O
+// FiloDB: Platform-optimized memory mapping
+filodb_mmap_darwin.go   // macOS optimizations
+filodb_mmap_unix.go     // Linux optimizations  
+filodb_mmap_windows.go  // Windows optimizations
+```
+
+### **ACID Transaction System** (Extended from book)
+| Feature | Book | FiloDB |
+|---------|------|--------|
+| **Basic Transactions** | Simple BEGIN/COMMIT | Full implementation |
+| **Rollback Support** | Limited | Complete ABORT functionality |
+| **Concurrent Reads** | Not covered | Multi-reader support |
+| **Transaction Safety** | Basic | Atomic operations with recovery |
+
+### **Interactive CLI Experience** (Not in book)
+```bash
+# Book: No interactive interface
+# FiloDB: Full command-line database shell
+> create    # Interactive table creation
+> insert    # Menu-driven data entry
+> get       # Multiple query type selection
+> scan      # Pretty-printed table viewing
+> debug     # Table structure inspection
+```
+
+### **Enhanced Command System** (Major extension)
+| Command Category | Book Coverage | FiloDB Implementation |
+|------------------|---------------|----------------------|
+| **Table Operations** | Basic | CREATE, INSERT, UPDATE, DELETE with validation |
+| **Query Interface** | Simple | GET with 3 query types + range selection |
+| **Analytics** | None | COUNT, SUM, AVG, MIN, MAX |
+| **Utilities** | None | SCAN, DEBUG, HELP |
+| **Transactions** | Basic | BEGIN, COMMIT, ABORT with error handling |
+
+### **Cross-Platform Compatibility** (Not in book)
+- **Memory mapping**: OS-specific optimizations for Darwin, Unix, Windows
+- **File handling**: Platform-aware I/O operations
+- **Build system**: Cross-compilation support with Go modules
+
+### **Performance & Monitoring** (Beyond book scope)
+- **Built-in benchmarking**: Performance measurement tools
+- **Memory management**: Free list optimization for space reuse
+- **Worker pools**: Background task processing
+- **Statistics**: Query performance monitoring
+
+---
+
+
+This project shows the journey from learning basic concepts to implementing a complete database system.
+
 ## License
 
 MIT License - See [LICENSE](LICENSE) file for details.
