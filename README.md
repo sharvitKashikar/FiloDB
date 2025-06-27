@@ -474,26 +474,53 @@ Enter column name: amount
 
 ## Performance
 
-### Benchmarks
-Based on testing with 10,000 records:
+### Real Benchmark Results
 
-| Operation | Performance |
-|-----------|-------------|
-| Insert | ~25,000 ops/sec |
-| Point Query | ~50,000 ops/sec |
-| Range Query | ~15,000 ops/sec |
-| Aggregates | ~10,000 ops/sec |
+Based on actual testing using the included benchmark tool:
 
-### Memory Usage
-- Base memory: ~10MB
-- Per table: ~1KB metadata
-- Memory mapping: OS-managed
+| Operation | **Actual Results** | Test Details |
+|-----------|-------------------|-------------|
+| **Insert Performance** | **1,813 ops/sec** | 50 records, 27.6ms total |
+| **Query Performance** | **1,848 ops/sec** | 100 lookups, 54.1ms total |
+| **Storage Efficiency** | **0.88 KB/record** | 44.0 KB for 50 records |
+| **Average Insert Latency** | **<1ms** | Sub-millisecond operations |
+| **Average Query Latency** | **0.5ms** | Excellent lookup speed |
+
+### Performance Highlights
+
+**Why It's Fast:**
+- **B+ Tree Storage**: Organized data structure for quick lookups
+- **Memory-Mapped I/O**: Direct OS-level file operations
+- **ACID Transactions**: Safety without sacrificing speed
+- **Concurrent Reads**: Multiple simultaneous read operations
+
+### Real-World Comparison
+
+| Database | Insert (ops/sec) | Query (ops/sec) | Use Case |
+|----------|------------------|-----------------|----------|
+| **FiloDB** | **~1,800** | **~1,850** | Educational, Small-Medium Apps |
+| SQLite | 1,000-10,000 | 10,000+ | Embedded Applications |
+| PostgreSQL | 5,000-50,000 | 50,000+ | Production Applications |
+
+### Running Benchmarks
+
+```bash
+# Run the included benchmark tool
+./benchmark.sh
+
+# Sample output:
+=== FiloDB Performance Benchmark ===
+Insert Performance: ~1813 ops/sec
+Query Performance: ~1848 ops/sec  
+Storage Efficiency: .88 KB per record
+```
 
 ### Optimization Tips
 1. **Use indexes** on frequently queried columns
 2. **Choose appropriate data types** (INT64 vs BYTES)
 3. **Use transactions** for related operations
 4. **Design composite indexes** for complex queries
+5. **Test with your data**: Run `./benchmark.sh` to see actual performance
 
 ## Troubleshooting
 
@@ -556,14 +583,14 @@ This project was built while learning database internals from various excellent 
 - **CMU Database Systems Course** - Implementation techniques and optimization strategies
 
 ### Open Source Database Codebases
-- **[SQLite source code](https://www.sqlite.org/src/doc/trunk/README.md)** - Production-quality B+ tree implementation
+- **[SQLite source code](https://www.sqlite.org/src/doc/trunk/README.md)** - Professional B+ tree implementation
 - **[BuntDB](https://github.com/tidwall/buntdb)** - Go-based in-memory database with spatial indexing
 - **[BadgerDB](https://github.com/dgraph-io/badger)** - LSM-tree based key-value store in Go
 - **[BoltDB](https://github.com/boltdb/bolt)** - Pure Go key/value store (archived but educational)
 
 ## What FiloDB Implements Beyond the Book
 
-The original "Build Your Own Database From Scratch" book covers fundamental concepts, but FiloDB extends these with production-ready features:
+The original "Build Your Own Database From Scratch" book covers fundamental concepts, but FiloDB extends these with additional features:
 
 ### **Advanced Data Type System** (Not in book)
 | Feature | Book Coverage | FiloDB Implementation |
@@ -592,7 +619,7 @@ MAX()    // Find maximum values (all data types)
 | **Column Filtering** | Not covered | Table scan with predicate filtering |
 | **Composite Indexes** | Not covered | Multi-column index support |
 
-### **Production-Ready Storage** (Enhanced from book)
+### **Enhanced Storage System** (Enhanced from book)
 ```go
 // Book: Basic file I/O
 // FiloDB: Platform-optimized memory mapping
