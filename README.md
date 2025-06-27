@@ -515,12 +515,7 @@ Query Performance: ~1848 ops/sec
 Storage Efficiency: .88 KB per record
 ```
 
-### Optimization Tips
-1. **Use indexes** on frequently queried columns
-2. **Choose appropriate data types** (INT64 vs BYTES)
-3. **Use transactions** for related operations
-4. **Design composite indexes** for complex queries
-5. **Test with your data**: Run `./benchmark.sh` to see actual performance
+ **Test with your data**: Run `./benchmark.sh` to see actual performance
 
 ## Troubleshooting
 
