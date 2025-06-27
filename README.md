@@ -11,6 +11,8 @@
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 ![Platform](https://img.shields.io/badge/Platform-Linux%20%7C%20macOS%20%7C%20Windows-lightgrey?style=for-the-badge)
 
+<a href="https://www.producthunt.com/products/github-129?embed=true&utm_source=badge-featured&utm_medium=badge&utm_source=badge-filodb" target="_blank"><img src="https://api.producthunt.com/widgets/embed-image/v1/featured.svg?post_id=984197&theme=dark&t=1751021212641" alt="FiloDB - FiloDB-Lightweight Relational Database System | Product Hunt" style="width: 250px; height: 54px;" width="250" height="54" /></a>
+
 **A lightweight, high-performance database system written in Go**
 
 *Interactive command-based database with B+ tree storage, ACID transactions, and memory-mapped I/O*
