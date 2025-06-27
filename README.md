@@ -13,7 +13,7 @@
 
 **A lightweight, high-performance relational database system written in Go**
 
-*Built with modern storage techniques, ACID transactions, and SQL-like interface*
+*Built with modern storage techniques, ACID transactions, and interactive command interface*
 
 </div>
 
@@ -42,7 +42,7 @@ FiloDB is a lightweight relational database management system designed for appli
 |---------|--------|-------------------|
 | **Dependencies** | Only `golang.org/x/sys` | Multiple external deps |
 | **CLI Experience** | Interactive with aggregate functions | Basic command interface |
-| **Query Features** | SQL-like with range queries | Standard SQL only |
+| **Query Features** | Range queries and column filtering | Basic CRUD only |
 | **Performance Metrics** | Built-in stats and monitoring | Limited visibility |
 | **Cross-Platform** | Optimized memory mapping per OS | Basic compatibility |
 | **Worker Pools** | Background processing support | Basic threading |
@@ -51,7 +51,7 @@ FiloDB is a lightweight relational database management system designed for appli
 
 - **High Performance**: B+ tree storage engine with memory-mapped I/O
 - **ACID Compliant**: Full transaction support with rollback capabilities
-- **Simple Yet Powerful**: SQL-like commands with intuitive interface
+- **Simple Yet Powerful**: Interactive commands with intuitive interface
 - **Reliable**: Built-in data integrity checks and error handling
 - **Concurrent**: Multi-reader support with optimized locking
 - **Lightweight**: Single binary deployment with no dependencies
@@ -88,7 +88,7 @@ FiloDB follows a modular architecture designed for performance and maintainabili
 
 ```
 ┌─────────────────────┐
-│   Command Layer     │  ← SQL-like command processing
+│   Command Layer     │  ← Interactive command processing
 ├─────────────────────┤
 │  Transaction Layer  │  ← ACID transaction management
 ├─────────────────────┤
@@ -104,7 +104,7 @@ FiloDB follows a modular architecture designed for performance and maintainabili
 
 | Component | File | Purpose |
 |-----------|------|---------|
-| **Command Processor** | `filodb_commands.go` | Parses and executes SQL-like commands |
+| **Command Processor** | `filodb_commands.go` | Parses and executes database commands |
 | **B+ Tree Engine** | `filodb_btree.go` | Core data structure for storage and indexing |
 | **Transaction Manager** | `filodb_transactions.go` | ACID compliance and concurrency control |
 | **Storage Layer** | `filodb_storage.go` | File I/O and memory mapping |
@@ -157,7 +157,7 @@ Available Commands You can use:
 ```
 
 ### 2. Create Your First Table
-```sql
+```
 > create
 Enter table name: users
 Enter column names (comma-separated): id,name,email,age
@@ -167,7 +167,7 @@ Table 'users' created successfully.
 ```
 
 ### 3. Insert Data
-```sql
+```
 > insert
 Enter table name: users
 Enter value for id: 1
@@ -178,7 +178,7 @@ Record inserted successfully.
 ```
 
 ### 4. Query Data
-```sql
+```
 > get
 Enter table name: users
 Select query type:
@@ -197,7 +197,7 @@ age: 30
 ```
 
 ### 5. Advanced Example with New Data Types
-```sql
+```
 # Create a products table with all data types
 > create
 Enter table name: products
@@ -255,7 +255,7 @@ For detailed performance analysis and optimization guides, see [PERFORMANCE.md](
 Creates a new table with specified columns and data types.
 
 **Syntax:**
-```sql
+```
 > create
 Enter table name: <table_name>
 Enter column names (comma-separated): <col1,col2,col3>
@@ -264,7 +264,7 @@ Enter indexes (format: col1+col2,col3, ... or leave empty): <optional_indexes>
 ```
 
 **Example:**
-```sql
+```
 > create
 Enter table name: products
 Enter column names (comma-separated): id,name,price,category
@@ -277,7 +277,7 @@ Table 'products' created successfully.
 Inserts a new record into the specified table.
 
 **Syntax:**
-```sql
+```
 > insert
 Enter table name: <table_name>
 Enter value for <column1>: <value1>
@@ -286,7 +286,7 @@ Enter value for <column2>: <value2>
 ```
 
 **Example:**
-```sql
+```
 > insert
 Enter table name: products
 Enter value for id: 101
@@ -308,7 +308,7 @@ Retrieves records from the database using various query methods.
 **Examples:**
 
 **Index Lookup:**
-```sql
+```
 > get
 Enter table name: products
 Select query type: 1
@@ -317,7 +317,7 @@ Enter value for id: 101
 ```
 
 **Range Query:**
-```sql
+```
 > get
 Enter table name: products
 Select query type: 2
@@ -330,7 +330,7 @@ Enter end range value: 1500
 Updates existing records in the table.
 
 **Syntax:**
-```sql
+```
 > update
 Enter table name: <table_name>
 Enter value for <primary_key>: <key_value>
@@ -339,7 +339,7 @@ Enter value for <column1>: <new_value1>
 ```
 
 **Example:**
-```sql
+```
 > update
 Enter table name: products
 Enter value for id: 101
@@ -353,14 +353,14 @@ Record updated successfully.
 Deletes records from the table.
 
 **Syntax:**
-```sql
+```
 > delete
 Enter table name: <table_name>
 Enter value for <primary_key>: <key_value>
 ```
 
 **Example:**
-```sql
+```
 > delete
 Enter table name: products
 Enter value for id: 101
@@ -372,7 +372,7 @@ Record deleted successfully.
 #### BEGIN - Start Transaction
 Begins a new transaction for atomic operations.
 
-```sql
+```
 > begin
 Transaction started.
 ```
@@ -380,7 +380,7 @@ Transaction started.
 #### COMMIT - Save Changes
 Commits all changes made during the current transaction.
 
-```sql
+```
 > commit
 Transaction committed successfully.
 ```
@@ -388,7 +388,7 @@ Transaction committed successfully.
 #### ABORT - Cancel Changes
 Rolls back all changes made during the current transaction.
 
-```sql
+```
 > abort
 Transaction aborted. All changes rolled back.
 ```
@@ -398,14 +398,14 @@ Transaction aborted. All changes rolled back.
 #### HELP - Show Commands
 Displays the list of available commands.
 
-```sql
+```
 > help
 ```
 
 #### EXIT - Close Database
 Safely closes the database and exits the program.
 
-```sql
+```
 > exit
 ```
 
@@ -417,13 +417,13 @@ FiloDB includes a powerful set of aggregate functions for data analysis and repo
 Counts the total number of records in a table.
 
 **Syntax:**
-```sql
+```
 > count
 Enter table name: <table_name>
 ```
 
 **Example:**
-```sql
+```
 > count
 Enter table name: sales
 Table: sales
@@ -436,14 +436,14 @@ This is particularly useful for getting quick insights into data volume and chec
 Adds up all numeric values in a specified column.
 
 **Syntax:**
-```sql
+```
 > sum
 Enter table name: <table_name>
 Enter column name for SUM: <numeric_column>
 ```
 
 **Example:**
-```sql
+```
 > sum
 Enter table name: sales
 Enter column name for SUM: amount
@@ -461,14 +461,14 @@ Great for calculating totals like revenue, quantities, or any numeric aggregatio
 Calculates the average value of a numeric column.
 
 **Syntax:**
-```sql
+```
 > avg
 Enter table name: <table_name>
 Enter column name for AVG: <numeric_column>
 ```
 
 **Example:**
-```sql
+```
 > avg
 Enter table name: products
 Enter column name for AVG: price
@@ -486,14 +486,14 @@ This helps you understand typical values like average order amounts or product p
 Finds the smallest value in a column (works with all data types).
 
 **Syntax:**
-```sql
+```
 > min
 Enter table name: <table_name>
 Enter column name for MIN: <column_name>
 ```
 
 **Example:**
-```sql
+```
 > min
 Enter table name: products
 Enter column name for MIN: price
@@ -509,14 +509,14 @@ MIN(price): 12.500000
 Finds the largest value in a column (works with all data types).
 
 **Syntax:**
-```sql
+```
 > max
 Enter table name: <table_name>
 Enter column name for MAX: <column_name>
 ```
 
 **Example:**
-```sql
+```
 > max
 Enter table name: sales
 Enter column name for MAX: amount
@@ -534,13 +534,13 @@ MAX(amount): 2500.000000
 Shows every record in a table with clean, formatted output.
 
 **Syntax:**
-```sql
+```
 > scan
 Enter table name: <table_name>
 ```
 
 **Example:**
-```sql
+```
 > scan
 Enter table name: users
 Record 1: id=1, name=Arjun Patel, email=arjun@techsolutions.com, age=28
@@ -555,13 +555,13 @@ This command is really useful for debugging and seeing all your data at once.
 Displays detailed information about a table's structure and contents.
 
 **Syntax:**
-```sql
+```
 > debug
 Enter table name: <table_name>
 ```
 
 **Example:**
-```sql
+```
 > debug
 Enter table name: products
 Table: products
@@ -576,7 +576,7 @@ Helps you understand table schemas and verify data integrity.
 ### Practical Examples
 
 **Monthly Sales Analysis for Mumbai Store:**
-```sql
+```
 # Get total sales count
 > count
 Enter table name: mumbai_sales
@@ -593,7 +593,7 @@ Enter column name for AVG: order_value
 ```
 
 **Delhi Warehouse Inventory Insights:**
-```sql
+```
 # Check minimum stock levels
 > min
 Enter table name: delhi_inventory
@@ -651,7 +651,7 @@ FiloDB supports five fundamental data types that cover most use cases:
 
 ### Type Specification Examples
 
-```sql
+```
 # Customer database for Indian e-commerce
 Enter column types: 1,2,2,1,4
 # Corresponds to: id(INT64), name(BYTES), email(BYTES), age(INT64), premium_member(BOOLEAN)
@@ -679,7 +679,7 @@ Indexes dramatically improve query performance. FiloDB supports both primary and
 #### Secondary Indexes
 Specify during table creation for additional fast lookup paths:
 
-```sql
+```
 Enter indexes: category,name+category,price
 ```
 
@@ -692,7 +692,7 @@ This creates:
 
 For complex queries involving multiple columns:
 
-```sql
+```
 # Table: orders
 # Columns: id, customer_id, order_date, status, total
 # Indexes: customer_id+status, order_date, total
@@ -708,7 +708,7 @@ Benefits:
 ### Transaction Best Practices
 
 #### Example: Bank Transfer (Priya to Rahul)
-```sql
+```
 > begin
 Transaction started.
 
@@ -732,7 +732,7 @@ If any operation fails, use `abort` to rollback all changes.
 
 ### Range Queries for Analytics
 
-```sql
+```
 # Find all products in price range
 > get
 Enter table name: products
