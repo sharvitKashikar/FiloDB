@@ -581,11 +581,12 @@ This project was built while learning database internals from various excellent 
 - **MIT 6.824 Distributed Systems** - Academic foundation for database design
 - **CMU Database Systems Course** - Implementation techniques and optimization strategies
 
-### Open Source Database Codebases
+### Open Source Database Codebases referred for learning 
 - **[SQLite source code](https://www.sqlite.org/src/doc/trunk/README.md)** - Professional B+ tree implementation
 - **[BuntDB](https://github.com/tidwall/buntdb)** - Go-based in-memory database with spatial indexing
 - **[BadgerDB](https://github.com/dgraph-io/badger)** - LSM-tree based key-value store in Go
 - **[BoltDB](https://github.com/boltdb/bolt)** - Pure Go key/value store (archived but educational)
+- **[AtomixDB]([https://github.com/boltdb/bolt](https://github.com/Sahilb315/AtomixDB.git))** 
 
 ## What FiloDB Implements Beyond the Book
 
