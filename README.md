@@ -581,7 +581,7 @@ This project was built while learning database internals from various excellent 
 - **MIT 6.824 Distributed Systems** - Academic foundation for database design
 - **CMU Database Systems Course** - Implementation techniques and optimization strategies
 
-### Open Source Database Codebases referred for learning 
+### Open Source Database Codebases 
 - **[AtomixDB](https://github.com/Sahilb315/AtomixDB.git)** 
 - **[SQLite source code](https://www.sqlite.org/src/doc/trunk/README.md)** - Professional B+ tree implementation
 - **[BuntDB](https://github.com/tidwall/buntdb)** - Go-based in-memory database with spatial indexing
