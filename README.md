@@ -482,11 +482,13 @@ Based on actual testing using the included benchmark tool:
 
 | Operation | **Actual Results** | Test Details |
 |-----------|-------------------|-------------|
-| **Insert Performance** | **1,813 ops/sec** | 50 records, 27.6ms total |
-| **Query Performance** | **1,848 ops/sec** | 100 lookups, 54.1ms total |
+| **Insert Performance** | **~2230 ops/sec** | 50 records, 22.4ms total |
+| **Query Performance** | **~2376 ops/sec** | 100 lookups, 42.1ms total |
 | **Storage Efficiency** | **0.88 KB/record** | 44.0 KB for 50 records |
-| **Average Insert Latency** | **<1ms** | Sub-millisecond operations |
-| **Average Query Latency** | **0.5ms** | Excellent lookup speed |
+| **Average Insert Latency** | **0s** | Sub-millisecond operations |
+| **Average Query Latency** | **0.004s** | Excellent lookup speed |
+
+![Benchmark Results](Assets/performance.png)
 
 ### Performance Highlights
 
@@ -499,8 +501,8 @@ Based on actual testing using the included benchmark tool:
 ### Real-World Comparison
 
 | Database | Insert (ops/sec) | Query (ops/sec) | Use Case |
-|----------|------------------|-----------------|----------|
-| **FiloDB** | **~1,800** | **~1,850** | Educational, Small-Medium Apps |
+|----------|-----------------|-----------------|-----------|
+| FiloDB | ~2230 | ~2376 | Educational, Small-Medium Apps |
 | SQLite | 1,000-10,000 | 10,000+ | Embedded Applications |
 | PostgreSQL | 5,000-50,000 | 50,000+ | Production Applications |
 
